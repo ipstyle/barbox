@@ -1,0 +1,15 @@
+# Build-Artefakte
+.build/
+build/
+Releases/
+*.zip
+
+# Private Projektnotizen (lokale Pfade, Arbeitsstände)
+CLAUDE.md
+SUMMARY.html
+
+# Generiert beim ersten Build
+Resources/AppIcon.icns
+
+# macOS
+.DS_Store
