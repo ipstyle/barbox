@@ -6,6 +6,14 @@ Eine kostenlose, quelloffene **Menüleisten-Toolbox für macOS** — inspiriert 
 
 **Deutsch und Englisch** — umschaltbar in den Einstellungen.
 
+<p align="center">
+  <img src="docs/menubar.jpg" alt="Toolbox in der Menüleiste" width="280">
+</p>
+<p align="center">
+  <img src="docs/dashboard.jpg" alt="Dashboard mit Desktops, Status-Chips, Reglern, Favoriten und Werkzeugen" width="360">
+  <img src="docs/about.jpg" alt="Einstellungen mit Info-Bereich" width="360">
+</p>
+
 ## Funktionen
 
 - **Desktop-Wechsel** — per Klick direkt auf Desktop 1–9 (zeigt den aktiven Desktop)

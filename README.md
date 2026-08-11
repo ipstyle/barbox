@@ -6,6 +6,14 @@ A free, open-source **menu bar toolbox for macOS** — inspired by Parallels Too
 
 **German and English UI** — switchable in the settings.
 
+<p align="center">
+  <img src="docs/menubar.jpg" alt="Toolbox in the menu bar" width="280">
+</p>
+<p align="center">
+  <img src="docs/dashboard.jpg" alt="Dashboard with desktops, status chips, sliders, favorites and tools" width="360">
+  <img src="docs/about.jpg" alt="Settings with about section" width="360">
+</p>
+
 ## Features
 
 - **Desktop switching** — jump straight to desktop 1–9 by click (shows the active desktop)
