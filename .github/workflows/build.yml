@@ -1,0 +1,66 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Release-Build (macOS)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Swift-Version
+        run: swift --version
+
+      # Warnungen sichtbar machen: der Absturz in 1.7 (doppelter Dictionary-
+      # Schlüssel) stand als Compiler-Warnung im Build-Log und ist trotzdem
+      # bis ins Release gekommen, weil niemand das Log zu Gesicht bekam.
+      - name: Build
+        run: swift build -c release 2>&1 | tee build.log
+
+      - name: Warnungen zusammenfassen
+        if: always()
+        run: |
+          COUNT=$(grep -c "warning:" build.log || true)
+          echo "### Compiler-Warnungen: ${COUNT}" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$COUNT" != "0" ]; then
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            grep "warning:" build.log | sort -u >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  leak-check:
+    name: Datenleck-Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # GitHub Secret Scanning deckt bekannte Key-Formate ab (sk-, ghp_, AKIA …)
+      # und blockiert sie beim Push. Dieser Schritt sucht das, was ein
+      # Format-Scanner NICHT kennt: persönliche Pfade, Namen, Mailadressen.
+      - name: Persönliche Daten in der History suchen
+        run: |
+          PATTERN='/Users/(ipstyle|albert)|frick\.a|ip-style\.com|com~apple~CloudDocs|Mobile Documents/|GEDAECHTNIS_|CLAUDE\.md'
+          if git log --all -p | grep -inE "$PATTERN"; then
+            echo "::error::Persönliche Daten in der Git-History gefunden — siehe Treffer oben."
+            exit 1
+          fi
+          echo "Persönliche Daten: keine Treffer."
+
+      - name: Commit-Autoren prüfen
+        run: |
+          BAD=$(git log --all --format='%ae' | sort -u | grep -v '@users.noreply.github.com' || true)
+          if [ -n "$BAD" ]; then
+            echo "::error::Commits mit echter Mailadresse: $BAD"
+            exit 1
+          fi
+          echo "Alle Commits nutzen die noreply-Adresse."

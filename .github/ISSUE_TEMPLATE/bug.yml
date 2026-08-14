@@ -1,0 +1,43 @@
+name: Fehler melden / Bug report
+description: Etwas funktioniert nicht wie erwartet
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Danke fürs Melden. **Bitte keine Zugangsdaten, API-Schlüssel, Token oder Screenshots mit persönlichen Daten einfügen** — auch nicht gekürzt. Issues sind öffentlich und dauerhaft einsehbar.
+
+        Sicherheitsprobleme gehören **nicht** hierher, sondern in die [private Meldefunktion](https://github.com/ipstyle/toolbox/security/advisories/new).
+  - type: input
+    id: version
+    attributes:
+      label: Toolbox-Version
+      description: Einstellungen → Über
+      placeholder: "1.8"
+    validations: { required: true }
+  - type: input
+    id: macos
+    attributes:
+      label: macOS-Version
+      placeholder: "15.2"
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes:
+      label: Was passiert?
+      description: Was hast du erwartet, was ist stattdessen passiert?
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte zum Nachstellen
+      placeholder: |
+        1. …
+        2. …
+        3. …
+    validations: { required: true }
+  - type: textarea
+    id: extra
+    attributes:
+      label: Sonstiges
+      description: Absturzbericht, Konsolenausgabe, Screenshot — geschwärzt, falls persönliche Daten darauf sind.
