@@ -50,7 +50,10 @@ jobs:
       - name: Persönliche Daten in der History suchen
         run: |
           PATTERN='/Users/(ipstyle|albert)|frick\.a|ip-style\.com|com~apple~CloudDocs|Mobile Documents/|GEDAECHTNIS_|CLAUDE\.md'
-          if git log --all -p | grep -inE "$PATTERN"; then
+          # Die Suchmuster stehen in dieser Datei und die Dateinamen in
+          # .gitignore — beide sind erwuenscht und wuerden sonst auf sich
+          # selbst anschlagen. Darum per Pathspec ausgenommen.
+          if git log --all -p -- . ':(exclude).github/workflows/*' ':(exclude).gitignore' | grep -inE "$PATTERN"; then
             echo "::error::Persönliche Daten in der Git-History gefunden — siehe Treffer oben."
             exit 1
           fi
