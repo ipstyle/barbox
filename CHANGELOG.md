@@ -1,5 +1,19 @@
 # Toolbox — Änderungsprotokoll / Changelog
 
+## 1.8 — 14.08.2026
+
+- Absturz behoben: Der englische Wortschatz enthielt den Schlüssel «Gespeichert»
+  zweimal. Swift bricht bei doppelten Schlüsseln in einem Dictionary-Literal zur
+  Laufzeit ab — die App stürzte beim Umschalten auf Englisch ab und startete
+  danach gar nicht mehr, weil die Sprachwahl gespeichert bleibt. Deutsch war nie
+  betroffen. / Fixed a crash: the English dictionary had a duplicate key, which
+  traps at runtime in Swift. The app crashed when switching to English and failed
+  to launch afterwards, since the language choice is persisted. German was never
+  affected.
+- PDF zusammenfügen: Die Erfolgsmeldung war zur Hälfte hartcodiert deutsch
+  («Seiten») und ist jetzt vollständig übersetzt. / The success message in the PDF
+  merge tool is now fully translated instead of partly hardcoded German.
+
 ## 1.7 — 10.08.2026
 
 - App zweisprachig: Deutsch und Englisch, umschaltbar in den Einstellungen

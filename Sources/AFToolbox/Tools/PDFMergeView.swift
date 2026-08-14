@@ -104,7 +104,8 @@ struct PDFMergeView: View {
             counter += 1
         }
         if output.write(to: destination) {
-            resultText = lang.t("Gespeichert") + ": \(destination.lastPathComponent) (\(output.pageCount) Seiten)"
+            resultText = String(format: lang.t("Gespeichert: %@ (%d Seiten)"),
+                                destination.lastPathComponent, output.pageCount)
             NSWorkspace.shared.activateFileViewerSelecting([destination])
         } else {
             errorText = lang.t("Speichern fehlgeschlagen.")
