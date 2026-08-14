@@ -1,0 +1,25 @@
+name: Idee / Feature request
+description: Vorschlag für eine Erweiterung
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Bitte keine persönlichen Daten einfügen.** Issues sind öffentlich.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Welches Problem löst das?
+      description: Was möchtest du tun, das heute nicht oder nur umständlich geht?
+    validations: { required: true }
+  - type: textarea
+    id: idea
+    attributes:
+      label: Wie stellst du dir die Lösung vor?
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Passt das zur App?
+      options:
+        - label: Das ist eine Menüleisten-Funktion, kein eigenständiges Programm
+          required: false
