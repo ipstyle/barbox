@@ -321,7 +321,7 @@ enum L10n {
         "PDF zusammenfügen": "Merge PDFs",
         "«%@» konnte nicht gelesen werden.": "Could not read “%@”.",
         "… und %d weitere": "… and %d more",
-        "Gespeichert": "Saved",
+        "Gespeichert: %@ (%d Seiten)": "Saved: %@ (%d pages)",
 
         // Fokus-Dialog
         "Kurzbefehl «%@» nicht gefunden": "Shortcut “%@” not found",
