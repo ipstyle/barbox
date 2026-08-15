@@ -13,3 +13,7 @@ Resources/AppIcon.icns
 
 # macOS
 .DS_Store
+
+# Interne App-Store-Vorbereitung (Strategie, Entwürfe)
+AppStore/
+PRUEFUNG_*.html
