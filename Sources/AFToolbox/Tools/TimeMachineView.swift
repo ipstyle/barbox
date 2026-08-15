@@ -1,6 +1,13 @@
 import AppKit
 import SwiftUI
 
+#if MAS_BUILD
+/// Store-Variante: tmutil-Steuerung ist in der Sandbox nicht möglich; die Kachel
+/// fehlt im ToolCatalog, dieser Stub hält nur die Route kompilierbar.
+struct TimeMachineView: View {
+    var body: some View { EmptyView() }
+}
+#else
 struct TimeMachineView: View {
     @EnvironmentObject private var lang: LanguageStore
     @State private var running = false
@@ -135,3 +142,4 @@ struct TimeMachineView: View {
         return component
     }
 }
+#endif

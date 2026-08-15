@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- Pflicht im Mac App Store -->
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+
+	<!-- Finanzen (frankfurter.dev, data.snb.ch), Wetter (open-meteo), IP (ipify) -->
+	<key>com.apple.security.network.client</key>
+	<true/>
+
+	<!-- Bilder/PDF/OCR/Umbenennen: vom Nutzer gewählte oder gezogene Dateien,
+	     inkl. Schreiben der Ausgabe nach Ordner-Freigabe -->
+	<key>com.apple.security.files.user-selected.read-write</key>
+	<true/>
+
+	<!-- Hell/Dunkel-Umschalter und Fokus via Apple Events (System Events /
+	     Shortcuts Events) statt osascript-Shell; Nutzer bestätigt einmalig -->
+	<key>com.apple.security.automation.apple-events</key>
+	<true/>
+
+	<!-- Wetter am Standort -->
+	<key>com.apple.security.personal-information.location</key>
+	<true/>
+
+	<!-- Bluetooth-Status lesen (IOBluetoothHostController) -->
+	<key>com.apple.security.device.bluetooth</key>
+	<true/>
+</dict>
+</plist>

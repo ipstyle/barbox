@@ -3,6 +3,21 @@ import ApplicationServices
 import CoreGraphics
 import Foundation
 
+#if MAS_BUILD
+/// Store-Variante: Tastatur-Injektion (CGEvent) und Bedienungshilfen sind in der
+/// Sandbox nicht verfügbar — der Desktop-Wechsel existiert dort nicht. Stub, damit
+/// die restliche UI kompiliert; alle Aufrufstellen sind unter MAS_BUILD ausgeblendet.
+enum DesktopSwitcher {
+    static var isTrusted: Bool { false }
+    static func requestPermission() {}
+    static func openAccessibilitySettings() {}
+    static func switchTo(_ number: Int) {}
+    static func previous() {}
+    static func next() {}
+    static func hotkeysEnabled(count: Int) -> Bool { false }
+    static func enableHotkeys(count: Int) {}
+}
+#else
 enum DesktopSwitcher {
     static var isTrusted: Bool { AXIsProcessTrusted() }
 
@@ -82,6 +97,7 @@ enum DesktopSwitcher {
         }
     }
 }
+#endif
 
 func openSystemURL(_ string: String) {
     if let url = URL(string: string) {

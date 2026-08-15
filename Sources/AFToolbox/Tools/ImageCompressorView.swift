@@ -143,6 +143,7 @@ struct ImageCompressorView: View {
     private func process(_ urls: [URL]) {
         let images = urls.filter { ImageCompressor.imageExtensions.contains($0.pathExtension.lowercased()) }
         guard !images.isEmpty, !working else { return }
+        guard FolderAccess.ensureWritable(forFiles: images) else { return }
         working = true
         let mode = mode
         let q = quality
