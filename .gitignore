@@ -17,3 +17,4 @@ Resources/AppIcon.icns
 # Interne App-Store-Vorbereitung (Strategie, Entwürfe)
 AppStore/
 PRUEFUNG_*.html
+.build-mas/

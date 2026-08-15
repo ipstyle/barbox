@@ -4,6 +4,16 @@ import Foundation
 /// Liest den aktuellen Desktop (Space) und die Anzahl Desktops über die private
 /// SkyLight-API aus — per dlsym, damit kein Linken gegen das Private Framework nötig ist.
 /// Fällt die API weg, liefert der Observer nil und die UI nutzt den Fallback.
+#if MAS_BUILD
+/// Store-Variante: SkyLight ist ein privates Framework — kein Space-Auslesen.
+/// Die Desktop-Sektion ist unter MAS_BUILD ohnehin ausgeblendet.
+@MainActor
+final class SpaceObserver: ObservableObject {
+    @Published var currentIndex: Int?
+    @Published var spaceCount: Int?
+    func refresh() {}
+}
+#else
 @MainActor
 final class SpaceObserver: ObservableObject {
     @Published var currentIndex: Int?
@@ -67,3 +77,4 @@ final class SpaceObserver: ObservableObject {
         spaceCount = nil
     }
 }
+#endif

@@ -168,7 +168,9 @@ struct DashboardView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
+                    #if !MAS_BUILD
                     desktopSection
+                    #endif
                     statusChips
                     ForEach(sectionOrder, id: \.self) { id in
                         sectionView(id)
@@ -358,11 +360,13 @@ struct DashboardView: View {
             }
             if let wifiOn = status.wifiOn {
                 Menu {
+                    #if !MAS_BUILD
                     Button(lang.t("Einschalten")) { status.setWifi(on: true) }
                         .disabled(wifiOn)
                     Button(lang.t("Ausschalten")) { status.setWifi(on: false) }
                         .disabled(!wifiOn)
                     Divider()
+                    #endif
                     Button(lang.t("WLAN-Einstellungen…")) {
                         openSystemURL("x-apple.systempreferences:com.apple.wifi-settings-extension")
                     }
@@ -376,6 +380,7 @@ struct DashboardView: View {
             }
             if let btOn = status.bluetoothOn {
                 Menu {
+                    #if !MAS_BUILD
                     if status.blueutilPath != nil {
                         Button(lang.t("Einschalten")) { status.setBluetooth(on: true) }
                             .disabled(btOn)
@@ -385,6 +390,7 @@ struct DashboardView: View {
                     } else {
                         Text(lang.t("Schalten braucht blueutil (siehe Einstellungen)"))
                     }
+                    #endif
                     Button(lang.t("Bluetooth-Einstellungen…")) {
                         openSystemURL("x-apple.systempreferences:com.apple.BluetoothSettings")
                     }
@@ -396,13 +402,16 @@ struct DashboardView: View {
                 .menuIndicator(.hidden)
                 .fixedSize()
             }
+            #if !MAS_BUILD
             airDropChip
+            #endif
             if status.busy {
                 ProgressView().controlSize(.small)
             }
         }
     }
 
+    #if !MAS_BUILD
     private var airDropChip: some View {
         let mode = status.airDropMode
         let active = mode == "Everyone" || mode == "Contacts Only"
@@ -430,6 +439,7 @@ struct DashboardView: View {
         .menuIndicator(.hidden)
         .fixedSize()
     }
+    #endif
 
     private func batteryIcon(_ percent: Int) -> String {
         switch percent {
@@ -688,8 +698,10 @@ struct DashboardView: View {
         case .darkMode:
             QuickActions.toggleDarkMode()
         case .airDrop:
+            #if !MAS_BUILD
             QuickActions.openAirDrop()
             closePopoverWindow()
+            #endif
         case .activityMonitor:
             QuickActions.openActivityMonitor()
             closePopoverWindow()

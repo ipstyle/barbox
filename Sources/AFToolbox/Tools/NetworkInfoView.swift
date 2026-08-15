@@ -44,6 +44,8 @@ struct NetworkInfoView: View {
                     }
                 }
 
+                #if !MAS_BUILD
+                // Nutzt das networkQuality-CLI — in der Sandbox nicht verlässlich
                 section(lang.t("Internet-Speedtest")) {
                     HStack(spacing: 8) {
                         Button(runningSpeedtest ? lang.t("Läuft… (~20 s)") : lang.t("Speedtest starten")) { runSpeedtest() }
@@ -72,6 +74,7 @@ struct NetworkInfoView: View {
                         }
                     }
                 }
+                #endif
 
                 section(lang.t("System")) {
                     infoRow(label: lang.t("CPU"), value: "\(stats.cpu) %")
@@ -145,6 +148,7 @@ struct NetworkInfoView: View {
         }
     }
 
+    #if !MAS_BUILD
     private func runSpeedtest() {
         runningSpeedtest = true
         speedResult = nil
@@ -174,6 +178,7 @@ struct NetworkInfoView: View {
             }
         }
     }
+    #endif
 
     private func loadHistory() {
         guard let data = speedtestHistoryRaw.data(using: .utf8),

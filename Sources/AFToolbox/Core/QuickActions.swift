@@ -2,18 +2,36 @@ import AppKit
 import Foundation
 
 enum QuickActions {
+#if MAS_BUILD
+    // Store-Variante: Apple Events direkt aus dem Prozess (Entitlement
+    // com.apple.security.automation.apple-events); osascript-Shell entfällt.
+    // macOS fragt beim ersten Gebrauch einmalig um die Automation-Freigabe.
+    static func toggleDarkMode() {
+        runAppleScript(
+            "tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode")
+    }
+
+    /// Führt einen Kurzbefehl aus der Kurzbefehle-App aus (z. B. für «Nicht stören»)
+    static func runShortcut(_ name: String) async -> Bool {
+        let escaped = name.replacingOccurrences(of: "\\", with: "\\\\")
+            .replacingOccurrences(of: "\"", with: "\\\"")
+        return runAppleScript(
+            "tell application \"Shortcuts Events\" to run the shortcut named \"\(escaped)\"")
+    }
+
+    @discardableResult
+    private static func runAppleScript(_ source: String) -> Bool {
+        var error: NSDictionary?
+        NSAppleScript(source: source)?.executeAndReturnError(&error)
+        return error == nil
+    }
+#else
     static func toggleDarkMode() {
         Task {
             _ = await Shell.runAsync("/usr/bin/osascript", [
                 "-e", "tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode",
             ])
         }
-    }
-
-    static func openActivityMonitor() {
-        NSWorkspace.shared.openApplication(
-            at: URL(fileURLWithPath: "/System/Applications/Utilities/Activity Monitor.app"),
-            configuration: NSWorkspace.OpenConfiguration())
     }
 
     /// Öffnet das AirDrop-Fenster im Finder (Cmd+Shift+R, braucht Bedienungshilfen-Freigabe)
@@ -37,5 +55,12 @@ enum QuickActions {
     static func runShortcut(_ name: String) async -> Bool {
         let result = await Shell.runAsync("/usr/bin/shortcuts", ["run", name])
         return result.status == 0
+    }
+#endif
+
+    static func openActivityMonitor() {
+        NSWorkspace.shared.openApplication(
+            at: URL(fileURLWithPath: "/System/Applications/Utilities/Activity Monitor.app"),
+            configuration: NSWorkspace.OpenConfiguration())
     }
 }

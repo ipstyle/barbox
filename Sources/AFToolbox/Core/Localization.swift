@@ -323,6 +323,13 @@ enum L10n {
         "… und %d weitere": "… and %d more",
         "Gespeichert: %@ (%d Seiten)": "Saved: %@ (%d pages)",
 
+        // Store-Variante (Sandbox)
+        "Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter) sowie api.ipify.org (öffentliche IP, nur auf Klick). Sonst keine Verbindungen — Inhalte werden nie übertragen.": "Only to api.frankfurter.dev (currency rates), data.snb.ch (SARON and SNB policy rate), open-meteo.com (weather) and api.ipify.org (public IP, on click only). No other connections — content is never transmitted.",
+        "Freigeben": "Allow",
+        "Damit Toolbox hier speichern darf, den Ordner einmalig bestätigen.": "To let Toolbox save here, confirm this folder once.",
+        "Ordner nicht freigegeben — nichts gespeichert.": "Folder not allowed — nothing was saved.",
+        "Mitteilungen (Timer), Automation (Hell/Dunkel, Fokus), Ort (Wetter), Ordner-Freigaben beim Speichern. Jede Freigabe wird erst beim ersten Gebrauch angefragt.": "Notifications (timer), automation (light/dark, focus), location (weather), folder access when saving. Each permission is requested on first use only.",
+
         // Fokus-Dialog
         "Kurzbefehl «%@» nicht gefunden": "Shortcut “%@” not found",
         "Lege in der Kurzbefehle-App einen Kurzbefehl mit genau diesem Namen an, der den Fokus «Nicht stören» umschaltet (Aktion «Fokus festlegen»). Der Name lässt sich in den AF-Toolbox-Einstellungen ändern.": "Create a shortcut with exactly this name in the Shortcuts app that toggles the Do Not Disturb focus (action “Set Focus”). The name can be changed in the app settings.",

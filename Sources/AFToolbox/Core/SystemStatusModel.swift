@@ -14,8 +14,13 @@ final class SystemStatusModel: ObservableObject {
     @Published var busy = false
 
     private(set) var wifiInterfaceName = "en0"
+#if MAS_BUILD
+    // Store-Variante: keine Schalter (Shell/Fremd-Binary) — nur Status-Anzeige
+    let blueutilPath: String? = nil
+#else
     let blueutilPath: String? = ["/opt/homebrew/bin/blueutil", "/usr/local/bin/blueutil"]
         .first { FileManager.default.isExecutableFile(atPath: $0) }
+#endif
 
     private var timer: Timer?
 
@@ -66,6 +71,7 @@ final class SystemStatusModel: ObservableObject {
         batteryPercent = nil
     }
 
+#if !MAS_BUILD
     func setWifi(on: Bool) {
         guard !busy else { return }
         busy = true
@@ -100,4 +106,5 @@ final class SystemStatusModel: ObservableObject {
             busy = false
         }
     }
+#endif
 }

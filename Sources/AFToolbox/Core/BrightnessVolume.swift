@@ -1,6 +1,41 @@
+import AudioToolbox
+import CoreAudio
 import CoreGraphics
 import Foundation
 
+#if MAS_BUILD
+/// Store-Variante: Für die Helligkeit gibt es kein öffentliches API — der Regler
+/// entfällt (current() == nil blendet ihn aus). Lautstärke läuft über CoreAudio
+/// statt osascript.
+enum Brightness {
+    static func current() -> Double? { nil }
+    static func set(_ value: Double) {}
+}
+
+enum VolumeControl {
+    private static var volumeAddress = AudioObjectPropertyAddress(
+        mSelector: kAudioHardwareServiceDeviceProperty_VirtualMainVolume,
+        mScope: kAudioDevicePropertyScopeOutput,
+        mElement: kAudioObjectPropertyElementMain)
+
+    static func current() async -> Int? {
+        guard let device = AudioDevices.defaultOutput() else { return nil }
+        var volume: Float32 = 0
+        var size = UInt32(MemoryLayout<Float32>.size)
+        guard AudioObjectGetPropertyData(device, &volumeAddress, 0, nil, &size, &volume) == noErr else {
+            return nil
+        }
+        return Int((volume * 100).rounded())
+    }
+
+    static func set(_ value: Int) async {
+        guard let device = AudioDevices.defaultOutput() else { return }
+        var volume = Float32(min(max(value, 0), 100)) / 100
+        AudioObjectSetPropertyData(device, &volumeAddress, 0, nil,
+                                   UInt32(MemoryLayout<Float32>.size), &volume)
+    }
+}
+#else
 /// Display-Helligkeit über das private DisplayServices-Framework (per dlsym,
 /// kein Linken nötig). Externe Displays unterstützen das oft nicht — dann nil.
 enum Brightness {
@@ -37,3 +72,4 @@ enum VolumeControl {
         _ = await Shell.runAsync("/usr/bin/osascript", ["-e", "set volume output volume \(min(max(value, 0), 100))"])
     }
 }
+#endif

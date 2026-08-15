@@ -117,6 +117,10 @@ struct RenameView: View {
         var renamed = 0
         var skipped = 0
         var number = startNumber
+        guard FolderAccess.ensureWritable(forFiles: files) else {
+            resultText = lang.t("Ordner nicht freigegeben — nichts gespeichert.")
+            return
+        }
         var newFiles: [URL] = []
         for url in files {
             let target = url.deletingLastPathComponent().appendingPathComponent(newName(for: url, number: number))

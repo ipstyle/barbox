@@ -24,10 +24,16 @@
 	<true/>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>AF-Toolbox zeigt das Wetter für deinen aktuellen Standort an.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>AF-Toolbox schaltet Bluetooth über blueutil ein und aus.</string>
+	<string>AF-Toolbox zeigt den Bluetooth-Status in der Menüleiste an.</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>AF-Toolbox schaltet damit Hell/Dunkel um und startet den Fokus-Kurzbefehl.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 ipstyle</string>
 </dict>

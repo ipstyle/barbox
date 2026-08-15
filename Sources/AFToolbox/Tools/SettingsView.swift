@@ -53,14 +53,24 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
 
                     VStack(alignment: .leading, spacing: 8) {
+                        #if MAS_BUILD
+                        aboutBlock(lang.t("Verbindungen"),
+                                   lang.t("Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter) sowie api.ipify.org (öffentliche IP, nur auf Klick). Sonst keine Verbindungen — Inhalte werden nie übertragen."))
+                        #else
                         aboutBlock(lang.t("Verbindungen"),
                                    lang.t("Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins) sowie api.ipify.org (öffentliche IP, nur auf Klick). Der Speedtest nutzt Apples eingebautes networkQuality. Sonst keine Verbindungen — Inhalte werden nie übertragen."))
+                        #endif
                         aboutBlock(lang.t("Lokal gelesen"),
                                    lang.t("Die App-Ordner (/Applications, ~/Applications) für die App-Liste — nur lesend. Bilder und PDFs nur, wenn du sie selbst hineinziehst."))
                         aboutBlock(lang.t("Gespeichert"),
                                    lang.t("Einstellungen in den macOS-Vorgaben, App-Favoriten unter ~/Library/Application Support/AF-Toolbox. Keine Zugangsdaten, keine Inhalte. Der Zwischenablage-Verlauf bleibt nur im Arbeitsspeicher und verschwindet beim Beenden."))
+                        #if MAS_BUILD
+                        aboutBlock(lang.t("Freigaben"),
+                                   lang.t("Mitteilungen (Timer), Automation (Hell/Dunkel, Fokus), Ort (Wetter), Ordner-Freigaben beim Speichern. Jede Freigabe wird erst beim ersten Gebrauch angefragt."))
+                        #else
                         aboutBlock(lang.t("Freigaben"),
                                    lang.t("Bedienungshilfen (Desktop-Wechsel), Bluetooth (Schalter via blueutil), Mitteilungen (Timer), Automation (Hell/Dunkel-Umschalter). Jede Freigabe wird erst beim ersten Gebrauch angefragt."))
+                        #endif
                     }
                     .padding(.top, 6)
 
@@ -153,6 +163,7 @@ struct SettingsView: View {
                     .foregroundStyle(.secondary)
             }
 
+            #if !MAS_BUILD
             Section(lang.t("Desktops")) {
                 Stepper(lang.t("Desktop-Knöpfe (Fallback): ") + "\(desktopCount)", value: $desktopCount, in: 1...9)
                 Text(lang.t("Die Anzahl wird normalerweise automatisch aus deinen echten Desktops gelesen; dieser Wert greift nur, falls das fehlschlägt."))
@@ -185,6 +196,7 @@ struct SettingsView: View {
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
             }
+            #endif
 
             Section(lang.t("Bilder komprimieren")) {
                 Stepper(lang.t("AI: längste Kante ") + "\(aiEdge) px", value: $aiEdge, in: 256...8192, step: 64)
@@ -231,6 +243,7 @@ struct SettingsView: View {
                 }
             }
 
+            #if !MAS_BUILD
             Section(lang.t("Status")) {
                 LabeledContent(lang.t("blueutil (Bluetooth-Schalter)")) {
                     if let path = status.blueutilPath {
@@ -250,6 +263,7 @@ struct SettingsView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+            #endif
         }
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)

@@ -97,6 +97,10 @@ struct PDFMergeView: View {
             }
         }
         let directory = files[0].deletingLastPathComponent()
+        guard FolderAccess.ensureWritable(directory) else {
+            errorText = lang.t("Ordner nicht freigegeben — nichts gespeichert.")
+            return
+        }
         var destination = directory.appendingPathComponent("Zusammengefuegt.pdf")
         var counter = 2
         while FileManager.default.fileExists(atPath: destination.path) {
