@@ -10,7 +10,10 @@ A free, open-source **menu bar toolbox for macOS** — inspired by Parallels Too
   <img src="docs/menubar.jpg" alt="Toolbox in the menu bar" width="280">
 </p>
 <p align="center">
-  <img src="docs/dashboard.jpg" alt="Dashboard with desktops, status chips, sliders, favorites and tools" width="360">
+  <img src="docs/dashboard-en.jpg" alt="Dashboard (English UI) with status chips, sliders, favorites, tools and weather" width="360">
+  <img src="docs/dashboard-de.jpg" alt="Dashboard (German UI) with status chips, sliders, favorites, tools and weather" width="360">
+</p>
+<p align="center">
   <img src="docs/about.jpg" alt="Settings with about section" width="360">
 </p>
 
