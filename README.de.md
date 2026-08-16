@@ -66,6 +66,8 @@ Jede Freigabe wird erst beim ersten Gebrauch angefragt:
 
 Keine Konten, kein Tracking, keine Analyse. Netzwerkverbindungen nur zu: `api.open-meteo.com` (Wetter), `api.frankfurter.dev` (Währungskurse), `data.snb.ch` (Schweizer Zinsen) und `api.ipify.org` (öffentliche IP, nur auf Klick). Der Speedtest nutzt Apples eingebautes `networkQuality`. Sonst verlässt nichts deinen Mac.
 
+Ausführlich: [Datenschutzrichtlinie](PRIVACY.md) (englisch).
+
 ## Selbst bauen
 
 Braucht nur die Xcode Command Line Tools (Swift 5.9+), kein Xcode-Projekt:

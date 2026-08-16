@@ -66,6 +66,8 @@ Each permission is requested on first use only:
 
 No accounts, no tracking, no analytics. Network connections only to: `api.open-meteo.com` (weather), `api.frankfurter.dev` (currency rates), `data.snb.ch` (Swiss interest rates) and `api.ipify.org` (public IP, on click only). The speed test uses Apple's built-in `networkQuality`. Nothing else leaves your Mac.
 
+Full details: [Privacy Policy](PRIVACY.md).
+
 ## Build from source
 
 Requires Xcode command line tools (Swift 5.9+). No Xcode project needed:
