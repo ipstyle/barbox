@@ -10,7 +10,10 @@ Eine kostenlose, quelloffene **Menüleisten-Toolbox für macOS** — inspiriert 
   <img src="docs/menubar.jpg" alt="Toolbox in der Menüleiste" width="280">
 </p>
 <p align="center">
-  <img src="docs/dashboard.jpg" alt="Dashboard mit Desktops, Status-Chips, Reglern, Favoriten und Werkzeugen" width="360">
+  <img src="docs/dashboard-de.jpg" alt="Dashboard (deutsche Oberfläche) mit Status-Chips, Reglern, Favoriten, Werkzeugen und Wetter" width="360">
+  <img src="docs/dashboard-en.jpg" alt="Dashboard (englische Oberfläche) mit Status-Chips, Reglern, Favoriten, Werkzeugen und Wetter" width="360">
+</p>
+<p align="center">
   <img src="docs/about.jpg" alt="Einstellungen mit Info-Bereich" width="360">
 </p>
 
