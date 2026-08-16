@@ -7,13 +7,12 @@ struct SettingsView: View {
     @EnvironmentObject private var status: SystemStatusModel
     @EnvironmentObject private var lang: LanguageStore
 
-    @AppStorage("desktopCount") private var desktopCount = 6
     @AppStorage("aiEdge") private var aiEdge = 1568
     @AppStorage("aiQuality") private var aiQuality = 0.80
     @AppStorage("halfQuality") private var halfQuality = 0.85
     @AppStorage("outputSuffix") private var outputSuffix = "-klein"
     @AppStorage("hiddenSettingsPanes") private var hiddenPanes = ""
-    @AppStorage("dndShortcutName") private var dndShortcutName = "Nicht stören"
+    @AppStorage("dndShortcutName") private var dndShortcutName = ""
     @AppStorage("windowWidth") private var windowWidth = 360.0
     @AppStorage("windowHeight") private var windowHeight = 560.0
     @AppStorage("weatherPlace") private var weatherPlace = ""
@@ -30,7 +29,7 @@ struct SettingsView: View {
                     Image(nsImage: NSApplication.shared.applicationIconImage)
                         .resizable()
                         .frame(width: 72, height: 72)
-                    Text(lang.t("Toolbox  « Alles zur Hand »"))
+                    Text(lang.t("BarBox  « Alles zur Hand »"))
                         .font(.system(size: 18, weight: .semibold))
                     Text(lang.t("Es Wärchzüg hät mer eifach …"))
                         .font(.system(size: 13))
@@ -40,14 +39,14 @@ struct SettingsView: View {
                         .font(.system(size: 11))
                         .foregroundStyle(.tertiary)
                         .padding(.top, 4)
-                    Button("github.com/ipstyle/toolbox") { openSystemURL("https://github.com/ipstyle/toolbox") }
+                    Button("github.com/ipstyle/barbox") { openSystemURL("https://github.com/ipstyle/barbox") }
                         .buttonStyle(.plain)
                         .font(.system(size: 12))
                         .foregroundStyle(Theme.blue)
 
                     Divider().padding(.vertical, 6)
 
-                    Text(lang.t("Bündelt Alltags-Werkzeuge für den Mac in der Menüleiste: Desktops, Apps, Bilder, Backups, System und Finanzen."))
+                    Text(lang.t("Bündelt Alltags-Werkzeuge für den Mac in der Menüleiste: Apps, Bilder, Backups, System und Finanzen."))
                         .font(.system(size: 12))
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.secondary)
@@ -63,13 +62,13 @@ struct SettingsView: View {
                         aboutBlock(lang.t("Lokal gelesen"),
                                    lang.t("Die App-Ordner (/Applications, ~/Applications) für die App-Liste — nur lesend. Bilder und PDFs nur, wenn du sie selbst hineinziehst."))
                         aboutBlock(lang.t("Gespeichert"),
-                                   lang.t("Einstellungen in den macOS-Vorgaben, App-Favoriten unter ~/Library/Application Support/AF-Toolbox. Keine Zugangsdaten, keine Inhalte. Der Zwischenablage-Verlauf bleibt nur im Arbeitsspeicher und verschwindet beim Beenden."))
+                                   lang.t("Einstellungen in den macOS-Vorgaben, App-Favoriten unter ~/Library/Application Support/BarBox. Keine Zugangsdaten, keine Inhalte. Der Zwischenablage-Verlauf bleibt nur im Arbeitsspeicher und verschwindet beim Beenden."))
                         #if MAS_BUILD
                         aboutBlock(lang.t("Freigaben"),
                                    lang.t("Mitteilungen (Timer), Automation (Hell/Dunkel, Fokus), Ort (Wetter), Ordner-Freigaben beim Speichern. Jede Freigabe wird erst beim ersten Gebrauch angefragt."))
                         #else
                         aboutBlock(lang.t("Freigaben"),
-                                   lang.t("Bedienungshilfen (Desktop-Wechsel), Bluetooth (Schalter via blueutil), Mitteilungen (Timer), Automation (Hell/Dunkel-Umschalter). Jede Freigabe wird erst beim ersten Gebrauch angefragt."))
+                                   lang.t("Bluetooth (Schalter via blueutil), Mitteilungen (Timer), Automation (Hell/Dunkel-Umschalter). Jede Freigabe wird erst beim ersten Gebrauch angefragt."))
                         #endif
                     }
                     .padding(.top, 6)
@@ -117,7 +116,8 @@ struct SettingsView: View {
                         .font(.system(size: 10))
                         .foregroundStyle(.red)
                 }
-                TextField(lang.t("Fokus-Kurzbefehl (Kurzbefehle-App)"), text: $dndShortcutName)
+                TextField(lang.t("Fokus-Kurzbefehl (Kurzbefehle-App)"), text: $dndShortcutName,
+                          prompt: Text(lang.code == "en" ? "Do Not Disturb" : "Nicht stören"))
                 Text(lang.t("Für den Fokus-Knopf einmal in der Kurzbefehle-App einen Kurzbefehl mit diesem Namen anlegen, der «Nicht stören» umschaltet."))
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
@@ -162,41 +162,6 @@ struct SettingsView: View {
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
             }
-
-            #if !MAS_BUILD
-            Section(lang.t("Desktops")) {
-                Stepper(lang.t("Desktop-Knöpfe (Fallback): ") + "\(desktopCount)", value: $desktopCount, in: 1...9)
-                Text(lang.t("Die Anzahl wird normalerweise automatisch aus deinen echten Desktops gelesen; dieser Wert greift nur, falls das fehlschlägt."))
-                    .font(.system(size: 10))
-                    .foregroundStyle(.secondary)
-                LabeledContent(lang.t("Bedienungshilfen-Freigabe")) {
-                    if DesktopSwitcher.isTrusted {
-                        Label(lang.t("erteilt"), systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                            .labelStyle(.titleAndIcon)
-                    } else {
-                        Button(lang.t("Freigabe einrichten…")) {
-                            DesktopSwitcher.requestPermission()
-                            DesktopSwitcher.openAccessibilitySettings()
-                        }
-                    }
-                }
-                LabeledContent(lang.t("Klick-Wechsel (Ctrl+1…9)")) {
-                    if DesktopSwitcher.hotkeysEnabled(count: 9) {
-                        Label(lang.t("eingerichtet"), systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                            .labelStyle(.titleAndIcon)
-                    } else {
-                        Button(lang.t("Jetzt einrichten")) {
-                            DesktopSwitcher.enableHotkeys(count: 9)
-                        }
-                    }
-                }
-                Text(lang.t("Der Wechsel läuft intern über die Mission-Control-Kurzbefehle Ctrl+1…9. «Jetzt einrichten» aktiviert sie automatisch — drücken musst du sie nie."))
-                    .font(.system(size: 10))
-                    .foregroundStyle(.secondary)
-            }
-            #endif
 
             Section(lang.t("Bilder komprimieren")) {
                 Stepper(lang.t("AI: längste Kante ") + "\(aiEdge) px", value: $aiEdge, in: 256...8192, step: 64)
@@ -258,7 +223,7 @@ struct SettingsView: View {
                         NSPasteboard.general.setString("brew install blueutil", forType: .string)
                         copied = true
                     }
-                    Text(lang.t("Befehl im Terminal ausführen, danach AF-Toolbox neu starten."))
+                    Text(lang.t("Befehl im Terminal ausführen, danach BarBox neu starten."))
                         .font(.system(size: 10))
                         .foregroundStyle(.secondary)
                 }

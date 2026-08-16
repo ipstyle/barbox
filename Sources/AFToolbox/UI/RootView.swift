@@ -18,7 +18,15 @@ enum Route: Hashable {
 }
 
 struct RootView: View {
-    @State private var path: [Route] = []
+    // Für Doku-Screenshots («--route settings»): Startansicht vorwählen
+    @State private var path: [Route] = {
+        let args = ProcessInfo.processInfo.arguments
+        if let idx = args.firstIndex(of: "--route"), args.count > idx + 1,
+           args[idx + 1] == "settings" {
+            return [.settings]
+        }
+        return []
+    }()
     @AppStorage("windowWidth") private var windowWidth = 360.0
     @AppStorage("windowHeight") private var windowHeight = 560.0
 

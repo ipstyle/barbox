@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 
 enum Shell {
@@ -21,5 +22,24 @@ enum Shell {
 
     static func runAsync(_ launchPath: String, _ args: [String]) async -> (status: Int32, output: String) {
         await Task.detached { run(launchPath, args) }.value
+    }
+
+    #if !MAS_BUILD
+    /// Simulierter Tastendruck mit Modifiern (braucht Bedienungshilfen-Freigabe)
+    static func postKeyEvent(key: CGKeyCode, flags: CGEventFlags) {
+        let source = CGEventSource(stateID: .hidSystemState)
+        guard let down = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: true),
+              let up = CGEvent(keyboardEventSource: source, virtualKey: key, keyDown: false) else { return }
+        down.flags = flags
+        up.flags = flags
+        down.post(tap: .cghidEventTap)
+        up.post(tap: .cghidEventTap)
+    }
+    #endif
+}
+
+func openSystemURL(_ string: String) {
+    if let url = URL(string: string) {
+        NSWorkspace.shared.open(url)
     }
 }

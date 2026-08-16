@@ -1,4 +1,5 @@
-// Erzeugt Resources/AppIcon.icns: Drehschlüssel auf dunklem, abgerundetem Hintergrund.
+// Erzeugt Resources/AppIcon.icns: BarBox-Motiv «Balken über Box» —
+// weisser Menübalken über offener weisser Box auf blauem Squircle (Konzept A).
 // Aufruf: swift scripts/make_icon.swift <Zielordner>
 import AppKit
 import Foundation
@@ -6,6 +7,10 @@ import Foundation
 let outDir = CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : "Resources"
 let iconsetDir = outDir + "/AppIcon.iconset"
 try? FileManager.default.createDirectory(atPath: iconsetDir, withIntermediateDirectories: true)
+
+let blue = NSColor(calibratedRed: 0.18, green: 0.42, blue: 0.90, alpha: 1) // #2E6BE6
+let blueTop = NSColor(calibratedRed: 0.24, green: 0.48, blue: 0.94, alpha: 1)
+let blueBottom = NSColor(calibratedRed: 0.14, green: 0.34, blue: 0.78, alpha: 1)
 
 func renderIcon(px: Int) -> NSBitmapImageRep {
     let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: px, pixelsHigh: px,
@@ -19,30 +24,52 @@ func renderIcon(px: Int) -> NSBitmapImageRep {
     // macOS-Icons haben Rand: Inhalt auf ~82 % der Kachel
     let inset = s * 0.09
     let rect = NSRect(x: inset, y: inset, width: s - 2 * inset, height: s - 2 * inset)
-    let radius = rect.width * 0.225
-    let path = NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
-    let gradient = NSGradient(starting: NSColor(calibratedRed: 0.28, green: 0.32, blue: 0.40, alpha: 1),
-                              ending: NSColor(calibratedRed: 0.13, green: 0.15, blue: 0.19, alpha: 1))!
-    gradient.draw(in: path, angle: -90)
+    let w = rect.width
 
-    let config = NSImage.SymbolConfiguration(pointSize: s * 0.42, weight: .medium)
-    if let symbol = NSImage(systemSymbolName: "wrench.adjustable", accessibilityDescription: nil)?
-        .withSymbolConfiguration(config) {
-        let symSize = symbol.size
-        let scale = (rect.width * 0.58) / max(symSize.width, symSize.height)
-        let drawSize = NSSize(width: symSize.width * scale, height: symSize.height * scale)
-        let drawRect = NSRect(x: rect.midX - drawSize.width / 2,
-                              y: rect.midY - drawSize.height / 2,
-                              width: drawSize.width, height: drawSize.height)
-        // Symbol weiss einfärben
-        let tinted = NSImage(size: drawSize)
-        tinted.lockFocus()
-        symbol.draw(in: NSRect(origin: .zero, size: drawSize))
-        NSColor.white.set()
-        NSRect(origin: .zero, size: drawSize).fill(using: .sourceAtop)
-        tinted.unlockFocus()
-        tinted.draw(in: drawRect)
+    // Hilfsfunktionen: Bruchteile des Inhaltsquadrats (x von links, y von unten)
+    func fx(_ f: CGFloat) -> CGFloat { rect.minX + f * w }
+    func fy(_ f: CGFloat) -> CGFloat { rect.minY + f * w }
+    func frect(_ x: CGFloat, _ y: CGFloat, _ fw: CGFloat, _ fh: CGFloat) -> NSRect {
+        NSRect(x: fx(x), y: fy(y), width: fw * w, height: fh * w)
     }
+
+    // Blaues Squircle mit sanftem Verlauf
+    let radius = w * 0.225
+    let squircle = NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
+    NSGradient(starting: blueTop, ending: blueBottom)!.draw(in: squircle, angle: -90)
+
+    // Menübalken (weiss) mit Menü-Pille und zwei Status-Punkten (blau)
+    NSColor.white.setFill()
+    NSBezierPath(roundedRect: frect(0.157, 0.729, 0.686, 0.114),
+                 xRadius: 0.057 * w, yRadius: 0.057 * w).fill()
+    blue.setFill()
+    NSBezierPath(roundedRect: frect(0.20, 0.762, 0.171, 0.046),
+                 xRadius: 0.023 * w, yRadius: 0.023 * w).fill()
+    for cx in [0.686, 0.764] {
+        NSBezierPath(ovalIn: frect(CGFloat(cx) - 0.023, 0.763, 0.046, 0.046)).fill()
+    }
+
+    // Offene Box: Deckel-Trapez + Korpus (weiss)
+    NSColor.white.setFill()
+    let lid = NSBezierPath()
+    lid.move(to: NSPoint(x: fx(0.250), y: fy(0.514)))
+    lid.line(to: NSPoint(x: fx(0.750), y: fy(0.514)))
+    lid.line(to: NSPoint(x: fx(0.793), y: fy(0.414)))
+    lid.line(to: NSPoint(x: fx(0.207), y: fy(0.414)))
+    lid.close()
+    lid.fill()
+    NSBezierPath(roundedRect: frect(0.25, 0.143, 0.50, 0.28),
+                 xRadius: 0.043 * w, yRadius: 0.043 * w).fill()
+
+    // Blaue Details: Lasche und zwei Inhaltszeilen
+    blue.setFill()
+    NSBezierPath(roundedRect: frect(0.343, 0.386, 0.314, 0.062),
+                 xRadius: 0.028 * w, yRadius: 0.028 * w).fill()
+    NSBezierPath(roundedRect: frect(0.336, 0.310, 0.328, 0.036),
+                 xRadius: 0.018 * w, yRadius: 0.018 * w).fill()
+    blue.withAlphaComponent(0.5).setFill()
+    NSBezierPath(roundedRect: frect(0.336, 0.232, 0.214, 0.036),
+                 xRadius: 0.018 * w, yRadius: 0.018 * w).fill()
 
     NSGraphicsContext.restoreGraphicsState()
     return rep

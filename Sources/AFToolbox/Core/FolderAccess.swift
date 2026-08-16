@@ -41,7 +41,7 @@ enum FolderAccess {
         panel.allowsMultipleSelection = false
         panel.directoryURL = folder
         panel.prompt = LanguageStore.current("Freigeben")
-        panel.message = LanguageStore.current("Damit Toolbox hier speichern darf, den Ordner einmalig bestätigen.")
+        panel.message = LanguageStore.current("Damit BarBox hier speichern darf, den Ordner einmalig bestätigen.")
         NSApplication.shared.activate(ignoringOtherApps: true)
         guard panel.runModal() == .OK, let granted = panel.url else { return false }
 

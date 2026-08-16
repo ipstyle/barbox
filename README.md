@@ -1,17 +1,17 @@
-# Toolbox
+# BarBox
 
 *[Deutsche Version →](README.de.md)*
 
-A free, open-source **menu bar toolbox for macOS** — inspired by Parallels Toolbox, built with SwiftUI. Everything one click away: desktops, apps, images, backups, system controls, weather and finance.
+A free, open-source **menu bar toolbox for macOS** — everything one click away: apps, images, PDFs, backups, system controls, weather and finance. Formerly known as *Toolbox / AF-Toolbox*.
 
-**German and English UI** — switchable in the settings.
+**English and German UI** — English by default, switchable in the settings.
 
 <p align="center">
-  <img src="docs/menubar.jpg" alt="Toolbox in the menu bar" width="280">
+  <img src="docs/menubar.jpg" alt="BarBox icon in the menu bar" width="280">
 </p>
 <p align="center">
-  <img src="docs/dashboard-en.jpg" alt="Dashboard (English UI) with status chips, sliders, favorites, tools and weather" width="360">
-  <img src="docs/dashboard-de.jpg" alt="Dashboard (German UI) with status chips, sliders, favorites, tools and weather" width="360">
+  <img src="docs/dashboard-en.jpg" alt="Dashboard (English UI) with CPU/MEM/GPU stats, status chips, sliders, favorites, tools and weather" width="360">
+  <img src="docs/dashboard-de.jpg" alt="Dashboard (German UI) with CPU/MEM/GPU stats, status chips, sliders, favorites, tools and weather" width="360">
 </p>
 <p align="center">
   <img src="docs/about.jpg" alt="Settings with about section" width="360">
@@ -19,7 +19,7 @@ A free, open-source **menu bar toolbox for macOS** — inspired by Parallels Too
 
 ## Features
 
-- **Desktop switching** — jump straight to desktop 1–9 by click (shows the active desktop)
+- **Live stats** — CPU, MEM and GPU usage right in the header
 - **Status chips** — battery, Wi-Fi and Bluetooth toggle, AirDrop mode, all as dropdowns
 - **Controls** — display brightness, volume, audio output device
 - **Favorites** — combine your most-used tools and quick actions, drag & drop to arrange; all sections are collapsible and reorderable
@@ -39,13 +39,15 @@ A free, open-source **menu bar toolbox for macOS** — inspired by Parallels Too
 
 ## Installation
 
-1. Download `Toolbox-x.y.zip` from the [latest release](../../releases/latest) and unzip it.
-2. Move `Toolbox.app` to `/Applications`.
-3. **First launch:** the app is not notarized (no paid Apple developer account behind this project). macOS will warn you — right-click the app → **Open** → **Open**. Alternatively:
+1. Download `BarBox-x.y.zip` from the [latest release](../../releases/latest) and unzip it.
+2. Move `BarBox.app` to `/Applications`.
+3. **First launch:** the GitHub build is not notarized. macOS will warn you — right-click the app → **Open** → **Open**. Alternatively:
 
 ```bash
-xattr -d com.apple.quarantine /Applications/Toolbox.app
+xattr -d com.apple.quarantine /Applications/BarBox.app
 ```
+
+A sandboxed Mac App Store edition is in preparation; the GitHub build always keeps the full feature set.
 
 ## Permissions
 
@@ -53,11 +55,12 @@ Each permission is requested on first use only:
 
 | Feature | Permission |
 |---|---|
-| Desktop switching | Accessibility (simulates Ctrl+1…9; the app can enable those Mission Control shortcuts for you) |
 | Bluetooth toggle | [blueutil](https://github.com/toy/blueutil) (`brew install blueutil`) + Bluetooth permission |
 | Weather | Location (or set a fallback place in settings) |
 | Timer | Notifications |
-| Light/dark toggle | Automation (System Events) |
+| Light/dark toggle, Focus | Automation (System Events / Shortcuts) |
+
+**Upgrading from Toolbox 1.x:** version 2.0 has a new bundle identifier, so macOS asks for these permissions once again and "Launch at login" must be re-enabled. Your app favorites are migrated automatically.
 
 ## Privacy
 
@@ -68,12 +71,14 @@ No accounts, no tracking, no analytics. Network connections only to: `api.open-m
 Requires Xcode command line tools (Swift 5.9+). No Xcode project needed:
 
 ```bash
-git clone https://github.com/ipstyle/toolbox.git
-cd toolbox
+git clone https://github.com/ipstyle/barbox.git
+cd barbox
 ./build.sh
-open build/Toolbox.app
+open build/BarBox.app
 ```
 
 ## License
 
 [GPL-3.0](LICENSE) · © 2026 ipstyle
+
+Copying, forking and redistribution are welcome under the GPL-3.0 terms — please keep the attribution to **ipstyle/barbox**.

@@ -3,11 +3,12 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleName</key>
-	<string>Toolbox</string>
+	<string>BarBox</string>
 	<key>CFBundleDisplayName</key>
-	<string>Toolbox</string>
+	<string>BarBox</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.ip-style.af-toolbox</string>
+	<string>com.ip-style.barbox</string>
+	<!-- Executable heisst bewusst weiterhin AFToolbox (internes Modul, nie sichtbar) -->
 	<key>CFBundleExecutable</key>
 	<string>AFToolbox</string>
 	<key>CFBundlePackageType</key>
@@ -29,11 +30,11 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>AF-Toolbox zeigt das Wetter für deinen aktuellen Standort an.</string>
+	<string>BarBox shows the weather for your current location.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>AF-Toolbox zeigt den Bluetooth-Status in der Menüleiste an.</string>
+	<string>BarBox shows the Bluetooth status in the menu bar.</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>AF-Toolbox schaltet damit Hell/Dunkel um und startet den Fokus-Kurzbefehl.</string>
+	<string>BarBox uses this to toggle light/dark mode and to run the Focus shortcut.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2026 ipstyle</string>
 </dict>

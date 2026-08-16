@@ -9,16 +9,13 @@ struct DashboardView: View {
     @EnvironmentObject private var status: SystemStatusModel
     @EnvironmentObject private var wake: WakeManager
     @EnvironmentObject private var favorites: FavoritesStore
-    @EnvironmentObject private var spaces: SpaceObserver
     @EnvironmentObject private var timerManager: TimerManager
     @EnvironmentObject private var stats: StatsModel
     @EnvironmentObject private var weather: WeatherModel
 
-    @AppStorage("desktopCount") private var desktopCount = 6
-    @AppStorage("dndShortcutName") private var dndShortcutName = "Nicht stören"
+    @AppStorage("dndShortcutName") private var dndShortcutName = ""
     @AppStorage("windowHeight") private var windowHeight = 560.0
 
-    @State private var hotkeysReady = true
     @State private var dropHover = false
 
     // Regler
@@ -45,8 +42,6 @@ struct DashboardView: View {
     @AppStorage("sectionOrder") private var sectionOrderRaw = ""
     @State private var sectionOrder: [String] = []
     @State private var draggingSection: String?
-
-    private var effectiveCount: Int { min(max(spaces.spaceCount ?? desktopCount, 1), 9) }
 
     @ViewBuilder
     private func sectionView(_ id: String) -> some View {
@@ -88,7 +83,7 @@ struct DashboardView: View {
                     HStack(spacing: 4) {
                         ForEach(current.days) { day in
                             VStack(spacing: 3) {
-                                Text(Self.weekday(day.date))
+                                Text(weekday(day.date))
                                     .font(.system(size: 9))
                                     .foregroundStyle(.secondary)
                                 Image(systemName: WeatherModel.symbol(for: day.code))
@@ -155,9 +150,9 @@ struct DashboardView: View {
         }
     }
 
-    private static func weekday(_ date: Date) -> String {
+    private func weekday(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "de_CH")
+        formatter.locale = Locale(identifier: lang.code == "en" ? "en_US" : "de_CH")
         formatter.dateFormat = "EE"
         return formatter.string(from: date)
     }
@@ -168,9 +163,6 @@ struct DashboardView: View {
             Divider()
             ScrollView {
                 VStack(alignment: .leading, spacing: 14) {
-                    #if !MAS_BUILD
-                    desktopSection
-                    #endif
                     statusChips
                     ForEach(sectionOrder, id: \.self) { id in
                         sectionView(id)
@@ -201,29 +193,23 @@ struct DashboardView: View {
         }
         .onAppear {
             status.startPolling()
-            spaces.refresh()
-            hotkeysReady = DesktopSwitcher.hotkeysEnabled(count: effectiveCount)
             loadControls()
             loadOrders()
             weather.refreshIfNeeded()
         }
         .onDisappear { status.stopPolling() }
-        .onChange(of: desktopCount) { _, _ in
-            hotkeysReady = DesktopSwitcher.hotkeysEnabled(count: effectiveCount)
-        }
     }
 
     // MARK: - Header
 
     private var header: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "wrench.adjustable")
-                .font(.system(size: 12, weight: .semibold))
-            Text("Toolbox")
+        HStack(spacing: 6) {
+            BarBoxMark(size: 13)
+            Text("BarBox")
                 .font(.system(size: 11, weight: .semibold))
-            Spacer()
+            Spacer(minLength: 4)
             statsInline
-            Spacer()
+            Spacer(minLength: 4)
             Button { path.append(Route.appList) } label: {
                 Image(systemName: "magnifyingglass").font(.system(size: 13))
             }
@@ -242,100 +228,28 @@ struct DashboardView: View {
     }
 
     private var statsInline: some View {
-        HStack(spacing: 14) {
-            statItem(icon: "cpu", value: stats.cpu, help: lang.t("CPU-Auslastung"))
-            statItem(icon: "memorychip", value: stats.mem, help: lang.t("RAM belegt"))
+        HStack(spacing: 8) {
+            statItem(label: "CPU", icon: "cpu", value: stats.cpu, help: lang.t("CPU-Auslastung"))
+            statItem(label: "MEM", icon: "memorychip", value: stats.mem, help: lang.t("RAM belegt"))
             if let gpu = stats.gpu {
-                statItem(icon: "display", value: gpu, help: lang.t("GPU-Auslastung"))
+                statItem(label: "GPU", icon: "display", value: gpu, help: lang.t("GPU-Auslastung"))
             }
         }
     }
 
-    private func statItem(icon: String, value: Int, help: String) -> some View {
-        HStack(spacing: 4) {
+    private func statItem(label: String, icon: String, value: Int, help: String) -> some View {
+        HStack(spacing: 3) {
             Image(systemName: icon)
-                .font(.system(size: 10))
+                .font(.system(size: 9))
                 .foregroundStyle(.secondary)
-            Text("\(value) %")
+            Text(label)
+                .font(.system(size: 8, weight: .semibold))
+                .foregroundStyle(.secondary)
+            Text("\(value)%")
                 .font(.system(size: 10, weight: .medium).monospacedDigit())
                 .foregroundStyle(value >= 85 ? Theme.orange : Color.primary.opacity(0.85))
         }
-        .help(help)
-    }
-
-    // MARK: - Desktops
-
-    private var desktopSection: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                SectionTitle(lang.t("Desktops"))
-                if let current = spaces.currentIndex {
-                    Text(lang.t("· aktiv: ") + "\(current)")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundStyle(Color.accentColor)
-                }
-                Spacer()
-                if !DesktopSwitcher.isTrusted {
-                    Button {
-                        DesktopSwitcher.requestPermission()
-                        DesktopSwitcher.openAccessibilitySettings()
-                    } label: {
-                        Label(lang.t("Freigabe nötig"), systemImage: "exclamationmark.triangle")
-                            .font(.system(size: 10))
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(Theme.orange)
-                    .help(lang.t("Zum Wechseln braucht AF-Toolbox die Bedienungshilfen-Freigabe — Klick öffnet die Einstellung"))
-                } else if !hotkeysReady {
-                    Button {
-                        DesktopSwitcher.enableHotkeys(count: 9)
-                        hotkeysReady = DesktopSwitcher.hotkeysEnabled(count: effectiveCount)
-                    } label: {
-                        Label(lang.t("Klick-Wechsel einrichten"), systemImage: "wand.and.stars")
-                            .font(.system(size: 10))
-                    }
-                    .buttonStyle(.plain)
-                    .foregroundStyle(Theme.orange)
-                    .help(lang.t("Aktiviert einmalig die macOS-Kurzbefehle Ctrl+1…9, über die der Klick-Wechsel läuft — du musst sie nie selbst drücken"))
-                }
-            }
-            HStack(spacing: 6) {
-                desktopButton(icon: "chevron.left", help: lang.t("Vorheriger Desktop")) {
-                    DesktopSwitcher.previous()
-                }
-                ForEach(1...effectiveCount, id: \.self) { number in
-                    let isCurrent = number == spaces.currentIndex
-                    Button {
-                        DesktopSwitcher.switchTo(number)
-                    } label: {
-                        Text("\(number)")
-                            .font(.system(size: 12, weight: isCurrent ? .bold : .medium))
-                            .frame(width: 28, height: 26)
-                            .background(isCurrent ? Theme.cardActive : Theme.card,
-                                        in: RoundedRectangle(cornerRadius: 7))
-                            .foregroundStyle(isCurrent ? Color.accentColor : Color.primary)
-                            .contentShape(RoundedRectangle(cornerRadius: 7))
-                    }
-                    .buttonStyle(.plain)
-                    .help(isCurrent ? lang.t("Aktueller Desktop") : lang.t("Zu Desktop ") + "\(number)" + lang.t(" wechseln"))
-                }
-                desktopButton(icon: "chevron.right", help: lang.t("Nächster Desktop")) {
-                    DesktopSwitcher.next()
-                }
-                Spacer()
-            }
-        }
-    }
-
-    private func desktopButton(icon: String, help: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(systemName: icon)
-                .font(.system(size: 11, weight: .medium))
-                .frame(width: 24, height: 26)
-                .background(Theme.card, in: RoundedRectangle(cornerRadius: 7))
-                .contentShape(RoundedRectangle(cornerRadius: 7))
-        }
-        .buttonStyle(.plain)
+        .fixedSize()
         .help(help)
     }
 
@@ -707,11 +621,14 @@ struct DashboardView: View {
             closePopoverWindow()
         case .focus:
             Task {
-                let ok = await QuickActions.runShortcut(dndShortcutName)
+                let shortcutName = dndShortcutName.isEmpty
+                    ? (lang.code == "en" ? "Do Not Disturb" : "Nicht stören")
+                    : dndShortcutName
+                let ok = await QuickActions.runShortcut(shortcutName)
                 if !ok {
                     let alert = NSAlert()
-                    alert.messageText = String(format: LanguageStore.current("Kurzbefehl «%@» nicht gefunden"), dndShortcutName)
-                    alert.informativeText = LanguageStore.current("Lege in der Kurzbefehle-App einen Kurzbefehl mit genau diesem Namen an, der den Fokus «Nicht stören» umschaltet (Aktion «Fokus festlegen»). Der Name lässt sich in den AF-Toolbox-Einstellungen ändern.")
+                    alert.messageText = String(format: LanguageStore.current("Kurzbefehl «%@» nicht gefunden"), shortcutName)
+                    alert.informativeText = LanguageStore.current("Lege in der Kurzbefehle-App einen Kurzbefehl mit genau diesem Namen an, der den Fokus «Nicht stören» umschaltet (Aktion «Fokus festlegen»). Der Name lässt sich in den BarBox-Einstellungen ändern.")
                     alert.addButton(withTitle: LanguageStore.current("Kurzbefehle öffnen"))
                     alert.addButton(withTitle: LanguageStore.current("OK"))
                     NSApplication.shared.activate(ignoringOtherApps: true)
@@ -809,7 +726,7 @@ struct DashboardView: View {
 
     private var footer: some View {
         HStack {
-            Text("Toolbox \(AppInfo.version)")
+            Text("BarBox \(AppInfo.version)")
                 .font(.system(size: 10))
                 .foregroundStyle(.tertiary)
             Spacer()

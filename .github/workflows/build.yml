@@ -25,6 +25,11 @@ jobs:
       - name: Build
         run: swift build -c release 2>&1 | tee build.log
 
+      # Store-Variante mitkompilieren (nur Compile-Check, kein Signing) —
+      # fängt Regressionen hinter #if MAS_BUILD bei jedem Push.
+      - name: Build (Store-Variante, MAS_BUILD)
+        run: swift build -c release -Xswiftc -DMAS_BUILD --scratch-path .build-mas 2>&1 | tee -a build.log
+
       - name: Warnungen zusammenfassen
         if: always()
         run: |

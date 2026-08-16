@@ -8,7 +8,7 @@ final class TimerManager: ObservableObject {
     @Published private(set) var remaining: TimeInterval = 0
 
     private var ticker: Timer?
-    private let notificationID = "af-toolbox.timer"
+    private let notificationID = "barbox.timer"
 
     var isRunning: Bool { endDate != nil }
 

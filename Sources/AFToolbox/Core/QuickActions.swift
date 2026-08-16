@@ -39,7 +39,7 @@ enum QuickActions {
         Task {
             _ = await Shell.runAsync("/usr/bin/osascript", ["-e", "tell application \"Finder\" to activate"])
             try? await Task.sleep(nanoseconds: 400_000_000)
-            DesktopSwitcher.post(key: 15, flags: [.maskCommand, .maskShift]) // R
+            Shell.postKeyEvent(key: 15, flags: [.maskCommand, .maskShift]) // R
         }
     }
 
