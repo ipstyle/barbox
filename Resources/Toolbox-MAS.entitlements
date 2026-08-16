@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<!-- App-Identität (Pflicht bei Distribution-Signatur; das Provisioning-
+	     Profil «BarBox Mac App Store» autorisiert diese Werte) -->
+	<key>com.apple.application-identifier</key>
+	<string>UGLPKQFM9U.com.ip-style.barbox</string>
+	<key>com.apple.developer.team-identifier</key>
+	<string>UGLPKQFM9U</string>
+
 	<!-- Pflicht im Mac App Store -->
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
