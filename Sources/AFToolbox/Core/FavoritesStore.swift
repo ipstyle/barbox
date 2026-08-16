@@ -14,10 +14,17 @@ final class FavoritesStore: ObservableObject {
     }
 
     private static let storeURL: URL = {
-        let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("AF-Toolbox", isDirectory: true)
+        let support = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        let dir = support.appendingPathComponent("BarBox", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-        return dir.appendingPathComponent("favorites.json")
+        let url = dir.appendingPathComponent("favorites.json")
+        // Migration vom alten Ordnernamen (bis 1.8: AF-Toolbox)
+        let legacy = support.appendingPathComponent("AF-Toolbox/favorites.json")
+        if !FileManager.default.fileExists(atPath: url.path),
+           FileManager.default.fileExists(atPath: legacy.path) {
+            try? FileManager.default.copyItem(at: legacy, to: url)
+        }
+        return url
     }()
 
     init() {

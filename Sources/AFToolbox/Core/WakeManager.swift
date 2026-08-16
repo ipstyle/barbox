@@ -19,7 +19,7 @@ final class WakeManager: ObservableObject {
         let result = IOPMAssertionCreateWithName(
             kIOPMAssertionTypePreventUserIdleDisplaySleep as CFString,
             IOPMAssertionLevel(kIOPMAssertionLevelOn),
-            "AF-Toolbox: Mac wach halten" as CFString,
+            "BarBox: keep Mac awake" as CFString,
             &id
         )
         guard result == kIOReturnSuccess else { return }

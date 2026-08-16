@@ -1,9 +1,10 @@
 import Foundation
 import SwiftUI
 
-/// Zweisprachigkeit Deutsch/Englisch. Deutsch ist die Quellsprache und dient als
-/// Schlüssel; fehlt eine Übersetzung, erscheint der deutsche Text (nie ein Key).
-/// Umschalten wirkt sofort, da alle Views den LanguageStore beobachten.
+/// Zweisprachigkeit Englisch/Deutsch. Deutsch ist intern die Quellsprache und
+/// dient als Schlüssel; fehlt eine Übersetzung, erscheint der deutsche Text
+/// (nie ein Key). Standard ist seit 2.0 Englisch; Umschalten wirkt sofort,
+/// da alle Views den LanguageStore beobachten.
 @MainActor
 final class LanguageStore: ObservableObject {
     @Published var code: String {
@@ -11,7 +12,7 @@ final class LanguageStore: ObservableObject {
     }
 
     init() {
-        code = UserDefaults.standard.string(forKey: "appLanguage") ?? "de"
+        code = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
     }
 
     func t(_ german: String) -> String {
@@ -20,7 +21,7 @@ final class LanguageStore: ObservableObject {
 
     /// Für Nicht-View-Code (Notifications, Alerts) ohne Store-Referenz
     nonisolated static func current(_ german: String) -> String {
-        let code = UserDefaults.standard.string(forKey: "appLanguage") ?? "de"
+        let code = UserDefaults.standard.string(forKey: "appLanguage") ?? "en"
         return code == "en" ? (L10n.english[german] ?? german) : german
     }
 }
@@ -28,8 +29,6 @@ final class LanguageStore: ObservableObject {
 enum L10n {
     static let english: [String: String] = [
         // Dashboard / Sektionen
-        "Desktops": "Desktops",
-        "· aktiv: ": "· active: ",
         "Favoriten": "Favorites",
         "Regler": "Controls",
         "System Settings": "System Settings",
@@ -38,8 +37,6 @@ enum L10n {
         "Wetter": "Weather",
         "Beenden": "Quit",
         "Zurück": "Back",
-        "Freigabe nötig": "Permission needed",
-        "Klick-Wechsel einrichten": "Set up click switching",
         "Noch leer — zieh dir Werkzeuge und Schnellaktionen hierher": "Still empty — drag your favorite tiles here",
         "Apps aus dem Finder hierhin ziehen": "Drag apps here from Finder",
         "Aus Favoriten entfernen": "Remove from favorites",
@@ -50,9 +47,6 @@ enum L10n {
         "Ausgabegerät": "Output device",
         "App-Liste durchsuchen": "Search app list",
         "Einstellungen": "Settings",
-        "Aktueller Desktop": "Current desktop",
-        "Vorheriger Desktop": "Previous desktop",
-        "Nächster Desktop": "Next desktop",
         "CPU-Auslastung": "CPU usage",
         "RAM belegt": "RAM used",
         "GPU-Auslastung": "GPU usage",
@@ -272,15 +266,6 @@ enum L10n {
         "Ort nicht gefunden": "Place not found",
         " übernommen": " applied",
         "Standard ist dein aktueller Standort (Ortungs-Freigabe beim ersten Öffnen der Wetter-Sektion). Der Fallback-Ort greift, wenn die Ortung aus ist.": "Default is your current location (permission prompt on first use of the weather section). The fallback place is used when location is off.",
-        "Desktop-Knöpfe (Fallback): ": "Desktop buttons (fallback): ",
-        "Die Anzahl wird normalerweise automatisch aus deinen echten Desktops gelesen; dieser Wert greift nur, falls das fehlschlägt.": "The count is normally read from your actual desktops; this value is only used if that fails.",
-        "Bedienungshilfen-Freigabe": "Accessibility permission",
-        "erteilt": "granted",
-        "Freigabe einrichten…": "Set up permission…",
-        "Klick-Wechsel (Ctrl+1…9)": "Click switching (Ctrl+1…9)",
-        "eingerichtet": "set up",
-        "Jetzt einrichten": "Set up now",
-        "Der Wechsel läuft intern über die Mission-Control-Kurzbefehle Ctrl+1…9. «Jetzt einrichten» aktiviert sie automatisch — drücken musst du sie nie.": "Switching uses the Mission Control shortcuts Ctrl+1…9 internally. “Set up now” enables them automatically — you never have to press them.",
         "Bilder komprimieren": "Compress images",
         "AI: längste Kante ": "AI: longest edge ",
         "AI-Qualität: ": "AI quality: ",
@@ -294,31 +279,28 @@ enum L10n {
         "blueutil (Bluetooth-Schalter)": "blueutil (Bluetooth switch)",
         "nicht installiert": "not installed",
         "Befehl kopieren: brew install blueutil": "Copy command: brew install blueutil",
-        "Befehl im Terminal ausführen, danach AF-Toolbox neu starten.": "Run the command in Terminal, then restart the app.",
+        "Befehl im Terminal ausführen, danach BarBox neu starten.": "Run the command in Terminal, then restart BarBox.",
         "Version": "Version",
 
         // About
         "Es Wärchzüg hät mer eifach …": "A proper tool is simply a must …",
-        "Bündelt Alltags-Werkzeuge für den Mac in der Menüleiste: Desktops, Apps, Bilder, Backups, System und Finanzen.": "Bundles everyday Mac tools in the menu bar: desktops, apps, images, backups, system and finance.",
+        "Bündelt Alltags-Werkzeuge für den Mac in der Menüleiste: Apps, Bilder, Backups, System und Finanzen.": "Bundles everyday Mac tools in the menu bar: apps, images, backups, system and finance.",
         "Verbindungen": "Connections",
         "Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins) sowie api.ipify.org (öffentliche IP, nur auf Klick). Der Speedtest nutzt Apples eingebautes networkQuality. Sonst keine Verbindungen — Inhalte werden nie übertragen.": "Only to api.frankfurter.dev (currency rates), data.snb.ch (SARON and SNB policy rate), open-meteo.com (weather) and api.ipify.org (public IP, on click only). The speed test uses Apple's built-in networkQuality. No other connections — content is never transmitted.",
         "Lokal gelesen": "Read locally",
         "Die App-Ordner (/Applications, ~/Applications) für die App-Liste — nur lesend. Bilder und PDFs nur, wenn du sie selbst hineinziehst.": "The app folders (/Applications, ~/Applications) for the app list — read-only. Images and PDFs only when you drop them yourself.",
         "Gespeichert": "Stored",
-        "Einstellungen in den macOS-Vorgaben, App-Favoriten unter ~/Library/Application Support/AF-Toolbox. Keine Zugangsdaten, keine Inhalte. Der Zwischenablage-Verlauf bleibt nur im Arbeitsspeicher und verschwindet beim Beenden.": "Settings in macOS defaults, app favorites under ~/Library/Application Support/AF-Toolbox. No credentials, no content. The clipboard history stays in memory only and disappears on quit.",
+        "Einstellungen in den macOS-Vorgaben, App-Favoriten unter ~/Library/Application Support/BarBox. Keine Zugangsdaten, keine Inhalte. Der Zwischenablage-Verlauf bleibt nur im Arbeitsspeicher und verschwindet beim Beenden.": "Settings in macOS defaults, app favorites under ~/Library/Application Support/BarBox. No credentials, no content. The clipboard history stays in memory only and disappears on quit.",
         "Freigaben": "Permissions",
-        "Bedienungshilfen (Desktop-Wechsel), Bluetooth (Schalter via blueutil), Mitteilungen (Timer), Automation (Hell/Dunkel-Umschalter). Jede Freigabe wird erst beim ersten Gebrauch angefragt.": "Accessibility (desktop switching), Bluetooth (switch via blueutil), notifications (timer), automation (light/dark toggle), location (weather). Each permission is requested on first use only.",
+        "Bluetooth (Schalter via blueutil), Mitteilungen (Timer), Automation (Hell/Dunkel-Umschalter). Jede Freigabe wird erst beim ersten Gebrauch angefragt.": "Bluetooth (switch via blueutil), notifications (timer), automation (light/dark toggle), location (weather). Each permission is requested on first use only.",
         "Sicherheit geprüft · Code-Review mit Claude Fable 5": "Security checked · code review with Claude Fable 5",
         "Durchgang am 10. August 2026 (1.2) — Fokus: Shell-Aufrufe, API-Nutzung, Freigaben, Parsing.": "Pass on August 10, 2026 (1.2) — focus: shell calls, API usage, permissions, parsing.",
 
         // Nachträge aus der Umstellung
-        "Zum Wechseln braucht AF-Toolbox die Bedienungshilfen-Freigabe — Klick öffnet die Einstellung": "Switching desktops needs the Accessibility permission — click opens the setting",
-        "Aktiviert einmalig die macOS-Kurzbefehle Ctrl+1…9, über die der Klick-Wechsel läuft — du musst sie nie selbst drücken": "Enables the macOS shortcuts Ctrl+1…9 once — click switching uses them internally, you never press them yourself",
-        "Zu Desktop ": "Switch to desktop ",
-        " wechseln": "",
         "Ausgabe: gleicher Ordner, Endung «%@.jpg». Presets in den Einstellungen anpassbar.": "Output: same folder, suffix “%@.jpg”. Presets adjustable in settings.",
-        "Toolbox  « Alles zur Hand »": "Toolbox  « Everything at hand »",
+        "BarBox  « Alles zur Hand »": "BarBox  « Everything at hand »",
         "PDF zusammenfügen": "Merge PDFs",
+        "Zusammengefuegt": "Merged",
         "«%@» konnte nicht gelesen werden.": "Could not read “%@”.",
         "… und %d weitere": "… and %d more",
         "Gespeichert: %@ (%d Seiten)": "Saved: %@ (%d pages)",
@@ -326,13 +308,13 @@ enum L10n {
         // Store-Variante (Sandbox)
         "Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter) sowie api.ipify.org (öffentliche IP, nur auf Klick). Sonst keine Verbindungen — Inhalte werden nie übertragen.": "Only to api.frankfurter.dev (currency rates), data.snb.ch (SARON and SNB policy rate), open-meteo.com (weather) and api.ipify.org (public IP, on click only). No other connections — content is never transmitted.",
         "Freigeben": "Allow",
-        "Damit Toolbox hier speichern darf, den Ordner einmalig bestätigen.": "To let Toolbox save here, confirm this folder once.",
+        "Damit BarBox hier speichern darf, den Ordner einmalig bestätigen.": "To let BarBox save here, confirm this folder once.",
         "Ordner nicht freigegeben — nichts gespeichert.": "Folder not allowed — nothing was saved.",
         "Mitteilungen (Timer), Automation (Hell/Dunkel, Fokus), Ort (Wetter), Ordner-Freigaben beim Speichern. Jede Freigabe wird erst beim ersten Gebrauch angefragt.": "Notifications (timer), automation (light/dark, focus), location (weather), folder access when saving. Each permission is requested on first use only.",
 
         // Fokus-Dialog
         "Kurzbefehl «%@» nicht gefunden": "Shortcut “%@” not found",
-        "Lege in der Kurzbefehle-App einen Kurzbefehl mit genau diesem Namen an, der den Fokus «Nicht stören» umschaltet (Aktion «Fokus festlegen»). Der Name lässt sich in den AF-Toolbox-Einstellungen ändern.": "Create a shortcut with exactly this name in the Shortcuts app that toggles the Do Not Disturb focus (action “Set Focus”). The name can be changed in the app settings.",
+        "Lege in der Kurzbefehle-App einen Kurzbefehl mit genau diesem Namen an, der den Fokus «Nicht stören» umschaltet (Aktion «Fokus festlegen»). Der Name lässt sich in den BarBox-Einstellungen ändern.": "Create a shortcut with exactly this name in the Shortcuts app that toggles the Do Not Disturb focus (action “Set Focus”). The name can be changed in the BarBox settings.",
         "Kurzbefehle öffnen": "Open Shortcuts",
         "OK": "OK",
     ]

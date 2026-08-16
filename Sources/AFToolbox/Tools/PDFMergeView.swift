@@ -101,10 +101,11 @@ struct PDFMergeView: View {
             errorText = lang.t("Ordner nicht freigegeben — nichts gespeichert.")
             return
         }
-        var destination = directory.appendingPathComponent("Zusammengefuegt.pdf")
+        let baseName = lang.t("Zusammengefuegt")
+        var destination = directory.appendingPathComponent("\(baseName).pdf")
         var counter = 2
         while FileManager.default.fileExists(atPath: destination.path) {
-            destination = directory.appendingPathComponent("Zusammengefuegt-\(counter).pdf")
+            destination = directory.appendingPathComponent("\(baseName)-\(counter).pdf")
             counter += 1
         }
         if output.write(to: destination) {

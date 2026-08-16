@@ -1,4 +1,33 @@
-# Toolbox — Änderungsprotokoll / Changelog
+# BarBox — Changelog / Änderungsprotokoll
+
+## 2.0 — 16.08.2026
+
+- **Rebranded to BarBox** (formerly Toolbox/AF-Toolbox). New app icon ("bar over
+  box") and matching monochrome menu bar symbol. The bundle identifier changed to
+  `com.ip-style.barbox`, so macOS treats 2.0 as a new app: existing users are
+  asked once again for the Location, Bluetooth and Automation permissions, and
+  Login-at-startup must be re-enabled. App favorites migrate automatically. /
+  **Umbenannt in BarBox** (vorher Toolbox/AF-Toolbox). Neues App-Icon («Balken
+  über Box») und passendes Menüleisten-Symbol. Die Bundle-ID ist neu
+  `com.ip-style.barbox` — macOS behandelt 2.0 darum wie eine neue App: Freigaben
+  (Ort, Bluetooth, Automation) werden einmalig neu angefragt, «Bei Anmeldung
+  starten» muss neu gesetzt werden. App-Favoriten wandern automatisch mit.
+- **English is now the default language.** German remains fully available via
+  Settings → Sprache/Language; an already saved language choice is kept. /
+  **Englisch ist neu die Standardsprache.** Deutsch bleibt in den Einstellungen
+  wählbar; eine bereits gespeicherte Sprachwahl bleibt erhalten.
+- **Desktop switching removed** from all builds — it required the Accessibility
+  permission and Mission-Control shortcuts and never worked reliably. /
+  **Desktop-Wechsel entfernt** (alle Varianten) — er brauchte die
+  Bedienungshilfen-Freigabe samt Mission-Control-Kurzbefehlen und lief nie
+  zuverlässig.
+- CPU / MEM / GPU indicators in the header now carry visible labels next to the
+  icons. / Die CPU-/MEM-/GPU-Anzeigen im Kopfbereich tragen neu sichtbare
+  Beschriftungen neben den Symbolen.
+- The merged-PDF filename follows the app language (Merged.pdf / 
+  Zusammengefuegt.pdf), and the SARON/SNB month labels are localized. / Der
+  Dateiname beim PDF-Zusammenfügen folgt neu der App-Sprache, die
+  SARON/SNB-Monatsnamen sind übersetzt.
 
 ## 1.8 — 14.08.2026
 

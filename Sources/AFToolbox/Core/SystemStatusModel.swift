@@ -45,7 +45,11 @@ final class SystemStatusModel: ObservableObject {
         } else {
             wifiOn = nil
         }
-        if let controller = IOBluetoothHostController.default() {
+        // Screenshot-Modus (Doku): Bluetooth-Zugriff löst die TCC-Abfrage aus —
+        // dort überspringen, damit der Lauf nicht am Freigabe-Dialog hängt.
+        if ProcessInfo.processInfo.arguments.contains("--screenshot") {
+            bluetoothOn = true
+        } else if let controller = IOBluetoothHostController.default() {
             bluetoothOn = controller.powerState == kBluetoothHCIPowerStateON
         } else {
             bluetoothOn = nil

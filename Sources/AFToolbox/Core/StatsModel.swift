@@ -11,13 +11,6 @@ final class StatsModel: ObservableObject {
     private var previousLoad = host_cpu_load_info_data_t()
     private var timer: Timer?
 
-    var menuTitle: String {
-        var parts = ["C\(cpu)", ]
-        if let gpu { parts.append("G\(gpu)") }
-        parts.append("M\(mem)")
-        return "AF-T " + parts.joined(separator: " ")
-    }
-
     init() {
         sample()
         timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in

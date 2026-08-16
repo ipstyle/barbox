@@ -52,6 +52,11 @@ final class WeatherModel: NSObject, ObservableObject {
     func refresh() {
         errorText = nil
         loading = true
+        // Screenshot-Modus (Doku): nie den echten Standort abbilden
+        if ProcessInfo.processInfo.arguments.contains("--screenshot") {
+            fetchWithFallback()
+            return
+        }
         switch manager.authorizationStatus {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()

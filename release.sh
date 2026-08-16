@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 VERSION=$(tr -d '[:space:]' < VERSION)
 DEST="Releases/$VERSION"
 mkdir -p "$DEST"
-rm -rf "$DEST/AF-Toolbox.app" "$DEST/Toolbox.app"
-ditto "build/Toolbox.app" "$DEST/Toolbox.app"
+rm -rf "$DEST/AF-Toolbox.app" "$DEST/Toolbox.app" "$DEST/BarBox.app"
+ditto "build/BarBox.app" "$DEST/BarBox.app"
 
-echo "✓ Release $VERSION: $DEST/Toolbox.app"
+echo "✓ Release $VERSION: $DEST/BarBox.app"

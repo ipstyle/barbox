@@ -1,11 +1,11 @@
 #!/bin/bash
-# Baut Toolbox.app aus dem Swift Package (ohne Xcode-Projekt).
+# Baut BarBox.app aus dem Swift Package (ohne Xcode-Projekt).
 # Bundle wird ausserhalb von iCloud zusammengesetzt und signiert —
 # iCloud stempelt sonst während des Signierens Metadaten hinein (detritus-Fehler).
 #
-#   ./build.sh          Vollversion  → build/Toolbox.app
+#   ./build.sh          Vollversion  → build/BarBox.app
 #   ./build.sh --mas    Store-Variante (App-Sandbox, ohne Systemwerkzeuge)
-#                       → build/Toolbox-MAS.app
+#                       → build/BarBox-MAS.app
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -27,21 +27,21 @@ if [ ! -f Resources/AppIcon.icns ]; then
 fi
 
 if [ "$MAS" = 1 ]; then
-    APP="build/Toolbox-MAS.app"
+    APP="build/BarBox-MAS.app"
     echo "→ swift build -c release (Store-Variante, MAS_BUILD)…"
     swift build -c release -Xswiftc -DMAS_BUILD --scratch-path .build-mas
     BINARY=.build-mas/release/AFToolbox
 else
-    APP="build/Toolbox.app"
+    APP="build/BarBox.app"
     echo "→ swift build -c release…"
     swift build -c release
     BINARY=.build/release/AFToolbox
 fi
 
 echo "→ Bundle zusammensetzen (in /tmp, ausserhalb iCloud)…"
-STAGE=$(mktemp -d /tmp/aftoolbox-build.XXXXXX)
+STAGE=$(mktemp -d /tmp/barbox-build.XXXXXX)
 trap 'rm -rf "$STAGE"' EXIT
-APP_STAGE="$STAGE/Toolbox.app"
+APP_STAGE="$STAGE/BarBox.app"
 mkdir -p "$APP_STAGE/Contents/MacOS" "$APP_STAGE/Contents/Resources"
 cp "$BINARY" "$APP_STAGE/Contents/MacOS/AFToolbox"
 cp Resources/Info.plist "$APP_STAGE/Contents/Info.plist"
@@ -70,10 +70,12 @@ if [ "$MAS" = 1 ]; then
 else
     # Stabile Identität verwenden, falls vorhanden (verhindert TCC-Verlust bei Updates);
     # sonst Ad-hoc. Eigene Identität anlegbar via Schlüsselbundverwaltung →
-    # Zertifikatsassistent → «Zertifikat erstellen…», Typ «Codesignierung», Name «AF-Toolbox Dev».
+    # Zertifikatsassistent → «Zertifikat erstellen…», Typ «Codesignierung», Name «BarBox Dev».
     IDENTITY="${CODESIGN_IDENTITY:-}"
-    if [ -z "$IDENTITY" ] && security find-identity -v -p codesigning 2>/dev/null | grep -q "AF-Toolbox Dev"; then
-        IDENTITY="AF-Toolbox Dev"
+    if [ -z "$IDENTITY" ] && security find-identity -v -p codesigning 2>/dev/null | grep -q "BarBox Dev"; then
+        IDENTITY="BarBox Dev"
+    elif [ -z "$IDENTITY" ] && security find-identity -v -p codesigning 2>/dev/null | grep -q "AF-Toolbox Dev"; then
+        IDENTITY="AF-Toolbox Dev"   # Übergangsweise: alte Dev-Identität weiterverwenden
     fi
     if [ -n "$IDENTITY" ]; then
         echo "→ Signatur mit «$IDENTITY»…"

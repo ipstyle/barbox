@@ -153,14 +153,14 @@ struct FinanceView: View {
         // SNB-Datenportal: SARON-Monatsmittel und Leitzins
         if let series = await fetchSNBSeries(cube: "zimoma", dimSel: "D0(SARON)") {
             if let last = series.last {
-                saron = (Self.germanMonth(last.0), last.1)
+                saron = (Self.monthLabel(last.0, code: lang.code), last.1)
             }
             if series.count >= 2 {
                 saronPrevious = series[series.count - 2].1
             }
         }
         if let series = await fetchSNBSeries(cube: "snboffzisa", dimSel: nil), let last = series.last {
-            policyRate = (Self.germanMonth(last.0), last.1)
+            policyRate = (Self.monthLabel(last.0, code: lang.code), last.1)
         }
         if saron == nil && policyRate == nil {
             errorText = (errorText == nil) ? lang.t("SNB-Daten nicht abrufbar") : lang.t("Kurse und SNB-Daten nicht abrufbar")
@@ -189,10 +189,12 @@ struct FinanceView: View {
         }
     }
 
-    private static func germanMonth(_ isoMonth: String) -> String {
+    private static func monthLabel(_ isoMonth: String, code: String) -> String {
         let parts = isoMonth.split(separator: "-")
         guard parts.count == 2, let month = Int(parts[1]) else { return isoMonth }
-        let names = ["Jan", "Feb", "März", "April", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"]
+        let names = code == "en"
+            ? ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            : ["Jan", "Feb", "März", "April", "Mai", "Juni", "Juli", "Aug", "Sept", "Okt", "Nov", "Dez"]
         let name = (1...12).contains(month) ? names[month - 1] : String(parts[1])
         return "\(name) \(parts[0])"
     }
