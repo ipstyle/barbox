@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BarBox — a toolbox in your menu bar</title>
+<meta name="description" content="BarBox is a free, open-source menu bar toolbox: live CPU, memory and GPU stats, image compression, OCR, PDF merge, timer, weather and finance — no accounts, no tracking.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff; --fg: #16181d; --muted: #5d636e; --line: #e3e6ea;
+    --card: #f7f8fa; --accent: #2e6be6; --accent-fg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #14161a; --fg: #e9eaee; --muted: #a0a6b0; --line: #2a2e36;
+            --card: #1c1f25; --accent: #5b8dfa; --accent-fg: #0d1016; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 16px/1.6 -apple-system, "Helvetica Neue", system-ui, sans-serif; }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 1.25rem; }
+  header { text-align: center; padding: 4rem 0 2.5rem; }
+  .icon { width: 104px; height: 104px; border-radius: 24px; display: block; margin: 0 auto 1.2rem; }
+  h1 { font-size: 2.4rem; margin: 0 0 .3rem; letter-spacing: -.02em; }
+  .tagline { font-size: 1.15rem; color: var(--muted); margin: 0 0 1.8rem; }
+  .badges { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.8rem; }
+  .badge { font-size: .8rem; color: var(--muted); border: 1px solid var(--line);
+           border-radius: 999px; padding: .25rem .8rem; }
+  .cta { display: inline-block; background: var(--accent); color: var(--accent-fg);
+         text-decoration: none; font-weight: 600; padding: .8rem 1.6rem;
+         border-radius: 10px; margin: 0 .3rem .6rem; }
+  .cta.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  h2 { font-size: 1.35rem; margin: 3rem 0 1rem; padding-bottom: .4rem; border-bottom: 1px solid var(--line); }
+  .shots { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: .6rem; }
+  .shots img { height: 460px; border-radius: 12px; border: 1px solid var(--line); flex: 0 0 auto; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; }
+  .card h3 { margin: 0 0 .4rem; font-size: 1rem; }
+  .card p, .card ul { margin: 0; color: var(--muted); font-size: .92rem; }
+  .card ul { padding-left: 1.1rem; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  code { background: var(--card); border: 1px solid var(--line); border-radius: 5px;
+         padding: .1rem .35rem; font-size: .85em; }
+  pre { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+        padding: .9rem 1rem; overflow-x: auto; font-size: .85rem; }
+  footer { margin: 4rem 0 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
+           color: var(--muted); font-size: .88rem; text-align: center; }
+  footer a { color: var(--muted); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <img class="icon" src="appicon.png" alt="BarBox app icon">
+  <h1>BarBox</h1>
+  <p class="tagline">Your everyday toolbox — one click away in the menu bar.</p>
+  <div class="badges">
+    <span class="badge">macOS 14 or later</span>
+    <span class="badge">Free</span>
+    <span class="badge">Open source · GPL-3.0</span>
+    <span class="badge">No accounts · no tracking</span>
+  </div>
+  <a class="cta" href="https://github.com/ipstyle/barbox/releases/latest">Download latest release</a>
+  <a class="cta secondary" href="https://github.com/ipstyle/barbox">Source on GitHub</a>
+</header>
+
+<h2>What it looks like</h2>
+<div class="shots">
+  <img src="dashboard-en.jpg" alt="BarBox dashboard with stats, favorites, tools and weather">
+  <img src="about.jpg" alt="BarBox settings and about section">
+  <img src="dashboard-de.jpg" alt="BarBox dashboard with German interface">
+</div>
+
+<h2>What it does</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Live stats</h3>
+    <p>CPU, memory and GPU usage right in the header. Battery, Wi-Fi and Bluetooth status at a glance.</p>
+  </div>
+  <div class="card">
+    <h3>Files &amp; text</h3>
+    <ul>
+      <li>Image compression (AI preset, half size)</li>
+      <li>Text from image (OCR, on-device)</li>
+      <li>Merge PDFs, batch rename, QR codes</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Everyday helpers</h3>
+    <ul>
+      <li>Keep awake, timer with notification</li>
+      <li>Clipboard history (memory only)</li>
+      <li>Password and UUID generator</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Info at a glance</h3>
+    <ul>
+      <li>Local and public IP</li>
+      <li>CHF → EUR/USD, SARON, SNB policy rate</li>
+      <li>Weather with 5-day forecast</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Your layout</h3>
+    <p>Favorites, app launcher, volume and audio output. Every section collapsible and reorderable, window size adjustable.</p>
+  </div>
+  <div class="card">
+    <h3>Two languages</h3>
+    <p>English and German interface, switchable in the settings — takes effect immediately.</p>
+  </div>
+</div>
+
+<h2>Install</h2>
+<ol>
+  <li>Download <code>BarBox-x.y.zip</code> from the <a href="https://github.com/ipstyle/barbox/releases/latest">latest release</a> and unzip it.</li>
+  <li>Move <code>BarBox.app</code> to your Applications folder.</li>
+  <li>First launch: the GitHub build is not notarized — right-click the app → <b>Open</b> → <b>Open</b>. Alternatively:</li>
+</ol>
+<pre>xattr -d com.apple.quarantine /Applications/BarBox.app</pre>
+
+<h2>Permissions</h2>
+<table>
+  <tr><th>Feature</th><th>Permission</th></tr>
+  <tr><td>Weather</td><td>Location — or set a fallback place in the settings</td></tr>
+  <tr><td>Timer</td><td>Notifications</td></tr>
+  <tr><td>Light/dark toggle, Focus</td><td>Automation (System Events / Shortcuts)</td></tr>
+  <tr><td>Bluetooth toggle</td><td><a href="https://github.com/toy/blueutil">blueutil</a> plus Bluetooth permission</td></tr>
+</table>
+<p style="color:var(--muted);font-size:.92rem">Every permission is requested only when the matching feature is used for the first time.</p>
+
+<h2>Privacy</h2>
+<p>No accounts, no tracking, no analytics, no third-party SDKs. The developer receives no data at all. Network requests go only to four public services — weather, currency rates, Swiss interest rates and a public-IP lookup — and carry no identifier.</p>
+<p><a href="https://github.com/ipstyle/barbox/blob/main/PRIVACY.md">Read the full privacy policy →</a></p>
+
+<h2>Support</h2>
+<p>Questions, bug reports and ideas belong in the issue tracker — that is the fastest way to reach the developer:</p>
+<p><a href="https://github.com/ipstyle/barbox/issues">github.com/ipstyle/barbox/issues</a></p>
+
+<h2>Build it yourself</h2>
+<p>Only the Xcode command line tools are required (Swift 5.9+), no Xcode project:</p>
+<pre>git clone https://github.com/ipstyle/barbox.git
+cd barbox
+./build.sh
+open build/BarBox.app</pre>
+
+<footer>
+  BarBox · <a href="https://github.com/ipstyle/barbox/blob/main/LICENSE">GPL-3.0</a> · © 2026 ipstyle<br>
+  Copying and forking are welcome under the licence terms — please keep the attribution.<br>
+  <a href="https://github.com/ipstyle/barbox">GitHub</a> ·
+  <a href="https://github.com/ipstyle/barbox/blob/main/PRIVACY.md">Privacy</a> ·
+  <a href="https://github.com/ipstyle/barbox/issues">Support</a> ·
+  <a href="https://github.com/ipstyle/barbox/blob/main/CHANGELOG.md">Changelog</a>
+</footer>
+
+</div>
+</body>
+</html>
