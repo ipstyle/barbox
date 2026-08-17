@@ -1,6 +1,6 @@
 # BarBox
 
-*[English version →](README.md)*
+**[BarBox-Website →](https://ipstyle.github.io/barbox/)** · *[English version →](README.md)*
 
 Eine kostenlose, quelloffene **Menüleisten-Toolbox für macOS** — alles einen Klick entfernt: Apps, Bilder, PDFs, Backups, Systemregler, Wetter und Finanzen. Früher bekannt als *Toolbox / AF-Toolbox*.
 

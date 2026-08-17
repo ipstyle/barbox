@@ -1,6 +1,6 @@
 # BarBox
 
-*[Deutsche Version →](README.de.md)*
+**[barbox website →](https://ipstyle.github.io/barbox/)** · *[Deutsche Version →](README.de.md)*
 
 A free, open-source **menu bar toolbox for macOS** — everything one click away: apps, images, PDFs, backups, system controls, weather and finance. Formerly known as *Toolbox / AF-Toolbox*.
 
