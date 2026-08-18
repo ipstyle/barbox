@@ -1,6 +1,6 @@
 # BarBox
 
-**[barbox website →](https://ipstyle.github.io/barbox/)** · *[Deutsche Version →](README.de.md)*
+**[Mac App Store →](https://apps.apple.com/app/id6802093315)** · **[Website →](https://ipstyle.github.io/barbox/)** · *[Deutsche Version →](README.de.md)*
 
 A free, open-source **menu bar toolbox for macOS** — everything one click away: apps, images, PDFs, backups, system controls, weather and finance. Formerly known as *Toolbox / AF-Toolbox*.
 
@@ -47,7 +47,7 @@ A free, open-source **menu bar toolbox for macOS** — everything one click away
 xattr -d com.apple.quarantine /Applications/BarBox.app
 ```
 
-A sandboxed Mac App Store edition is in preparation; the GitHub build always keeps the full feature set.
+**Or get it from the [Mac App Store](https://apps.apple.com/app/id6802093315)** — sandboxed, signed by Apple, with automatic updates. The GitHub build keeps the full feature set in return (brightness, Wi-Fi and Bluetooth switches, AirDrop, Time Machine, speed test).
 
 ## Permissions
 

@@ -1,6 +1,6 @@
 # BarBox
 
-**[BarBox-Website →](https://ipstyle.github.io/barbox/)** · *[English version →](README.md)*
+**[Mac App Store →](https://apps.apple.com/app/id6802093315)** · **[Website →](https://ipstyle.github.io/barbox/)** · *[English version →](README.md)*
 
 Eine kostenlose, quelloffene **Menüleisten-Toolbox für macOS** — alles einen Klick entfernt: Apps, Bilder, PDFs, Backups, Systemregler, Wetter und Finanzen. Früher bekannt als *Toolbox / AF-Toolbox*.
 
@@ -47,7 +47,7 @@ Eine kostenlose, quelloffene **Menüleisten-Toolbox für macOS** — alles einen
 xattr -d com.apple.quarantine /Applications/BarBox.app
 ```
 
-Eine Mac-App-Store-Fassung (Sandbox) ist in Vorbereitung; der GitHub-Build behält immer den vollen Funktionsumfang.
+**Oder aus dem [Mac App Store](https://apps.apple.com/app/id6802093315)** — dort läuft BarBox in der Sandbox, von Apple signiert und mit automatischen Updates. Der GitHub-Build behält dafür den vollen Funktionsumfang (Helligkeit, WLAN-/Bluetooth-Schalter, AirDrop, Time Machine, Speedtest).
 
 ## Freigaben
 
