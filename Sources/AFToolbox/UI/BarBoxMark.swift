@@ -20,16 +20,21 @@ struct BarBoxMark: View {
 enum BarBoxIcon {
     /// Monochromes Menüleisten-Symbol; isTemplate lässt macOS die Farbe
     /// an helle/dunkle Menüleiste anpassen.
+    ///
+    /// Bewusst sofort in eine Bitmap gezeichnet statt über den verzögerten
+    /// drawingHandler von `NSImage(size:flipped:)`: Der wird erst beim Zeichnen
+    /// aufgerufen, und in der Menüleiste kam dabei nichts an — das Element
+    /// belegte Platz, blieb aber leer.
     static let menuBarImage: NSImage = {
         let size = NSSize(width: 18, height: 17)
-        let image = NSImage(size: size, flipped: false) { rect in
-            NSColor.black.setFill()
-            NSBezierPath(roundedRect: NSRect(x: 1, y: rect.height - 5.6, width: rect.width - 2, height: 4.2),
-                         xRadius: 2.1, yRadius: 2.1).fill()
-            NSBezierPath(roundedRect: NSRect(x: 2.5, y: 1.4, width: rect.width - 5, height: 8.8),
-                         xRadius: 2.2, yRadius: 2.2).fill()
-            return true
-        }
+        let image = NSImage(size: size)
+        image.lockFocus()
+        NSColor.black.setFill()
+        NSBezierPath(roundedRect: NSRect(x: 1, y: size.height - 5.6, width: size.width - 2, height: 4.2),
+                     xRadius: 2.1, yRadius: 2.1).fill()
+        NSBezierPath(roundedRect: NSRect(x: 2.5, y: 1.4, width: size.width - 5, height: 8.8),
+                     xRadius: 2.2, yRadius: 2.2).fill()
+        image.unlockFocus()
         image.isTemplate = true
         image.accessibilityDescription = "BarBox"
         return image

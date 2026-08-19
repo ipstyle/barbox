@@ -67,6 +67,7 @@ final class StatusBarController: NSObject {
     private func applyButton() {
         guard let button = statusItem.button else { return }
         button.image = BarBoxIcon.menuBarImage
+        button.imagePosition = .imageOnly   // ohne das zeichnet der Knopf je nach macOS gar nichts
         button.target = self
         button.action = #selector(togglePopover)
         button.toolTip = "BarBox"
