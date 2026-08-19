@@ -22,8 +22,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let timerManager = TimerManager()
     private let weather = WeatherModel()
     private let language = LanguageStore()
+    private let updates = UpdateChecker()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        // Einmalige Anhebung der Fensterhöhe für alle, die nie am Regler waren
+        WindowMetrics.migrateDefaultHeightIfNeeded()
+
         let root = AnyView(
             RootView()
                 .environmentObject(systemStatus)
@@ -34,8 +38,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 .environmentObject(timerManager)
                 .environmentObject(weather)
                 .environmentObject(language)
+                .environmentObject(updates)
         )
         statusBar = StatusBarController(rootView: root, wake: wake)
+
+        // Verzögert, damit der Start nicht am Netz hängt
+        Task { [updates] in
+            try? await Task.sleep(for: .seconds(5))
+            await updates.checkIfNeeded()
+        }
 
         // Für Doku-Screenshots: zeigt den Inhalt in einem freien Fenster an
         // fester Position (unten links 60/60) — unabhängig von der Menüleiste.
@@ -67,6 +78,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 exit(0)
             }
         }
+    }
+
+    /// macOS startet keine zweite Instanz, sondern schickt der laufenden ein
+    /// Reopen. Wenn das Menüleisten-Symbol verschwunden ist, ist das der einzige
+    /// verlässliche Weg zurück — Symbol wiederherstellen und Fenster zeigen.
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows: Bool) -> Bool {
+        statusBar?.reassertAndShow()
+        return true
     }
 
     private var screenshotWindow: NSWindow?

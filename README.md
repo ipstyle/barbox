@@ -64,7 +64,7 @@ Each permission is requested on first use only:
 
 ## Privacy
 
-No accounts, no tracking, no analytics. Network connections only to: `api.open-meteo.com` (weather), `api.frankfurter.dev` (currency rates), `data.snb.ch` (Swiss interest rates) and `api.ipify.org` (public IP, on click only). The speed test uses Apple's built-in `networkQuality`. Nothing else leaves your Mac.
+No accounts, no tracking, no analytics. Network connections only to: `api.open-meteo.com` and `geocoding-api.open-meteo.com` (weather and place lookup), `api.frankfurter.dev` (currency rates), `data.snb.ch` (Swiss interest rates), `api.ipify.org` (public IP, on click only) and `itunes.apple.com` (update check, switchable off). The speed test uses Apple's built-in `networkQuality`. Nothing else leaves your Mac.
 
 Full details: [Privacy Policy](PRIVACY.md).
 

@@ -64,7 +64,7 @@ Jede Freigabe wird erst beim ersten Gebrauch angefragt:
 
 ## Privatsphäre
 
-Keine Konten, kein Tracking, keine Analyse. Netzwerkverbindungen nur zu: `api.open-meteo.com` (Wetter), `api.frankfurter.dev` (Währungskurse), `data.snb.ch` (Schweizer Zinsen) und `api.ipify.org` (öffentliche IP, nur auf Klick). Der Speedtest nutzt Apples eingebautes `networkQuality`. Sonst verlässt nichts deinen Mac.
+Keine Konten, kein Tracking, keine Analyse. Netzwerkverbindungen nur zu: `api.open-meteo.com` und `geocoding-api.open-meteo.com` (Wetter und Ortssuche), `api.frankfurter.dev` (Währungskurse), `data.snb.ch` (Schweizer Zinsen), `api.ipify.org` (öffentliche IP, nur auf Klick) sowie `itunes.apple.com` (Update-Prüfung, abschaltbar). Der Speedtest nutzt Apples eingebautes `networkQuality`. Sonst verlässt nichts deinen Mac.
 
 Ausführlich: [Datenschutzrichtlinie](PRIVACY.md) (englisch).
 

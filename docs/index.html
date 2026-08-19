@@ -113,6 +113,14 @@
                       border-radius:8px; border:1px solid var(--line); }
   .menubar-shot figcaption { font-size:.8rem; color:var(--muted); margin-top:.5rem; }
 
+  /* what's new */
+  .release h3 { display:flex; align-items:baseline; gap:.6rem; margin:0 0 .5rem; font-size:1.05rem; }
+  .release .when { font-size:.78rem; font-weight:400; color:var(--muted); }
+  .release .now { font-size:.72rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+                  background:var(--accent); color:var(--accent-fg); border-radius:999px; padding:.1rem .5rem; }
+  .release ul { margin:0; padding-left:1.1rem; color:var(--muted); font-size:.92rem; }
+  .release ul li { margin-bottom:.35rem; }
+
   /* text columns */
   .cols { display:grid; gap:1.25rem 2rem; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); }
   .cols h3 { font-size:1rem; margin:0 0 .3rem; }
@@ -288,6 +296,54 @@
   </div>
 </section>
 
+<section id="whatsnew">
+  <h2 data-en="What&#8217;s new" data-de="Was ist neu">What&#8217;s new</h2>
+  <p class="sub"
+     data-en="Still being worked on. Here is what changed most recently."
+     data-de="Wird weiterentwickelt. Das hat sich zuletzt ge&auml;ndert.">Still being worked on. Here is what changed most recently.</p>
+  <div class="grid">
+    <div class="card release">
+      <h3>2.1 <span class="now" data-en="Latest" data-de="Neuste">Latest</span> <span class="when">19.08.2026</span></h3>
+      <ul>
+        <li data-en="Fixed: the settings screen was cut off the first time you opened it."
+            data-de="Behoben: Die Einstellungen waren beim ersten &Ouml;ffnen abgeschnitten.">Fixed: the settings screen was cut off the first time you opened it.</li>
+        <li data-en="Menu bar icon: several causes of it disappearing are fixed, and it restores itself after a display change or waking from sleep."
+            data-de="Men&uuml;leisten-Symbol: Mehrere Ursachen f&uuml;rs Verschwinden behoben; es stellt sich nach Displaywechsel oder Aufwachen selbst wieder her.">Menu bar icon: several causes of it disappearing are fixed, and it restores itself after a display change or waking from sleep.</li>
+        <li data-en="The window can be up to 1500&nbsp;px tall now, capped to what your screen actually fits."
+            data-de="Das Fenster darf neu bis 1500&nbsp;px hoch sein — begrenzt auf das, was der Bildschirm hergibt.">The window can be up to 1500&nbsp;px tall now, capped to what your screen actually fits.</li>
+        <li data-en="New: a daily update check that speaks up only when there really is a newer version. Switchable off."
+            data-de="Neu: eine t&auml;gliche Update-Pr&uuml;fung, die sich nur meldet, wenn es wirklich eine neuere Version gibt. Abschaltbar.">New: a daily update check that speaks up only when there really is a newer version. Switchable off.</li>
+      </ul>
+    </div>
+    <div class="card release">
+      <h3>2.0 <span class="when">16.08.2026</span></h3>
+      <ul>
+        <li data-en="Renamed to BarBox, with a new icon and a matching menu bar symbol."
+            data-de="Umbenannt in BarBox, mit neuem Icon und passendem Men&uuml;leisten-Symbol.">Renamed to BarBox, with a new icon and a matching menu bar symbol.</li>
+        <li data-en="English is now the default language; German stays available in the settings."
+            data-de="Englisch ist neu die Standardsprache; Deutsch bleibt in den Einstellungen w&auml;hlbar.">English is now the default language; German stays available in the settings.</li>
+        <li data-en="CPU, memory and GPU in the header carry visible labels."
+            data-de="CPU, Speicher und GPU im Kopfbereich tragen sichtbare Beschriftungen.">CPU, memory and GPU in the header carry visible labels.</li>
+        <li data-en="First version on the Mac App Store."
+            data-de="Erste Fassung im Mac App Store.">First version on the Mac App Store.</li>
+      </ul>
+    </div>
+    <div class="card release">
+      <h3>1.8 <span class="when">14.08.2026</span></h3>
+      <ul>
+        <li data-en="Fixed a crash when switching the interface to English."
+            data-de="Absturz beim Umschalten der Oberfl&auml;che auf Englisch behoben.">Fixed a crash when switching the interface to English.</li>
+        <li data-en="The PDF merge tool is fully translated instead of partly German."
+            data-de="Das PDF-Werkzeug ist vollst&auml;ndig &uuml;bersetzt statt teilweise deutsch.">The PDF merge tool is fully translated instead of partly German.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="sub" style="margin:1.6rem 0 0">
+    <a href="https://github.com/ipstyle/barbox/blob/main/CHANGELOG.md"
+       data-en="Every version since 1.0 &#8594;" data-de="Alle Versionen seit 1.0 &#8594;">Every version since 1.0 &#8594;</a>
+  </p>
+</section>
+
 <section id="install">
   <h2 data-en="Install" data-de="Installieren">Install</h2>
   <p class="sub"
@@ -361,8 +417,8 @@
     </div>
     <div>
       <h3 data-en="In transit" data-de="Auf dem Weg">In transit</h3>
-      <p data-en-html="Four hosts over HTTPS, all of them public services, none of them mine: &lt;code&gt;api.open-meteo.com&lt;/code&gt; for weather, &lt;code&gt;api.frankfurter.dev&lt;/code&gt; for rates, &lt;code&gt;data.snb.ch&lt;/code&gt; for Swiss interest rates, and &lt;code&gt;api.ipify.org&lt;/code&gt; only when you click. No identifier travels with them."
-         data-de-html="Vier Server &uuml;ber HTTPS, alles &ouml;ffentliche Dienste, keiner davon meiner: &lt;code&gt;api.open-meteo.com&lt;/code&gt; f&uuml;rs Wetter, &lt;code&gt;api.frankfurter.dev&lt;/code&gt; f&uuml;r Kurse, &lt;code&gt;data.snb.ch&lt;/code&gt; f&uuml;r Schweizer Zinsen und &lt;code&gt;api.ipify.org&lt;/code&gt; nur auf Klick. Es reist keine Kennung mit.">Four hosts over HTTPS, all of them public services, none of them mine: <code>api.open-meteo.com</code> for weather, <code>api.frankfurter.dev</code> for rates, <code>data.snb.ch</code> for Swiss interest rates, and <code>api.ipify.org</code> only when you click. No identifier travels with them.</p>
+      <p data-en-html="Six hosts over HTTPS, all of them public services, none of them mine: &lt;code&gt;open-meteo.com&lt;/code&gt; for weather and place lookup, &lt;code&gt;api.frankfurter.dev&lt;/code&gt; for rates, &lt;code&gt;data.snb.ch&lt;/code&gt; for Swiss interest rates, &lt;code&gt;api.ipify.org&lt;/code&gt; only when you click, and &lt;code&gt;itunes.apple.com&lt;/code&gt; for the update check. No identifier travels with them."
+         data-de-html="Sechs Server &uuml;ber HTTPS, alles &ouml;ffentliche Dienste, keiner davon meiner: &lt;code&gt;open-meteo.com&lt;/code&gt; f&uuml;r Wetter und Ortssuche, &lt;code&gt;api.frankfurter.dev&lt;/code&gt; f&uuml;r Kurse, &lt;code&gt;data.snb.ch&lt;/code&gt; f&uuml;r Schweizer Zinsen, &lt;code&gt;api.ipify.org&lt;/code&gt; nur auf Klick und &lt;code&gt;itunes.apple.com&lt;/code&gt; f&uuml;r die Update-Pr&uuml;fung. Es reist keine Kennung mit.">Six hosts over HTTPS, all of them public services, none of them mine: <code>open-meteo.com</code> for weather and place lookup, <code>api.frankfurter.dev</code> for rates, <code>data.snb.ch</code> for Swiss interest rates, <code>api.ipify.org</code> only when you click, and <code>itunes.apple.com</code> for the update check. No identifier travels with them.</p>
     </div>
     <div>
       <h3 data-en="Nothing comes back to me" data-de="Nichts kommt zu mir zur&uuml;ck">Nothing comes back to me</h3>

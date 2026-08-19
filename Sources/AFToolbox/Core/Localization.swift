@@ -285,8 +285,23 @@ enum L10n {
         // About
         "Es Wärchzüg hät mer eifach …": "A proper tool is simply a must …",
         "Bündelt Alltags-Werkzeuge für den Mac in der Menüleiste: Apps, Bilder, Backups, System und Finanzen.": "Bundles everyday Mac tools in the menu bar: apps, images, backups, system and finance.",
+        // Update-Prüfer (2.1)
+        "Aktualisierung": "Updates",
+        "Beim Start auf neue Version prüfen": "Check for a new version at launch",
+        "Jetzt prüfen": "Check now",
+        "Noch nicht geprüft.": "Not checked yet.",
+        "Wird geprüft…": "Checking…",
+        "Aktuell — geprüft ": "Up to date — checked ",
+        "Aktuell.": "Up to date.",
+        "ist verfügbar.": "is available.",
+        "laden…": "download…",
+        "Prüfung nicht möglich (offline?).": "Cannot check right now (offline?).",
+        "Neue Version verfügbar — Einstellungen öffnen": "New version available — open settings",
+        // Fenstergrösse (2.1)
+        "Auf Vorgabe zurücksetzen": "Reset to default",
+        "Auf diesen Bildschirm passen höchstens": "This screen fits at most",
         "Verbindungen": "Connections",
-        "Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins) sowie api.ipify.org (öffentliche IP, nur auf Klick). Der Speedtest nutzt Apples eingebautes networkQuality. Sonst keine Verbindungen — Inhalte werden nie übertragen.": "Only to api.frankfurter.dev (currency rates), data.snb.ch (SARON and SNB policy rate), open-meteo.com (weather) and api.ipify.org (public IP, on click only). The speed test uses Apple's built-in networkQuality. No other connections — content is never transmitted.",
+        "Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter und Ortssuche), api.ipify.org (öffentliche IP, nur auf Klick) sowie itunes.apple.com (Update-Prüfung). Der Speedtest nutzt Apples eingebautes networkQuality. Sonst keine Verbindungen — Inhalte werden nie übertragen.": "Only to api.frankfurter.dev (currency rates), data.snb.ch (SARON and SNB policy rate), open-meteo.com (weather and place search), api.ipify.org (public IP, on click only) and itunes.apple.com (update check). The speed test uses Apple's built-in networkQuality. No other connections — content is never transmitted.",
         "Lokal gelesen": "Read locally",
         "Die App-Ordner (/Applications, ~/Applications) für die App-Liste — nur lesend. Bilder und PDFs nur, wenn du sie selbst hineinziehst.": "The app folders (/Applications, ~/Applications) for the app list — read-only. Images and PDFs only when you drop them yourself.",
         "Gespeichert": "Stored",
@@ -306,7 +321,7 @@ enum L10n {
         "Gespeichert: %@ (%d Seiten)": "Saved: %@ (%d pages)",
 
         // Store-Variante (Sandbox)
-        "Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter) sowie api.ipify.org (öffentliche IP, nur auf Klick). Sonst keine Verbindungen — Inhalte werden nie übertragen.": "Only to api.frankfurter.dev (currency rates), data.snb.ch (SARON and SNB policy rate), open-meteo.com (weather) and api.ipify.org (public IP, on click only). No other connections — content is never transmitted.",
+        "Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter und Ortssuche), api.ipify.org (öffentliche IP, nur auf Klick) sowie itunes.apple.com (Update-Prüfung). Sonst keine Verbindungen — Inhalte werden nie übertragen.": "Only to api.frankfurter.dev (currency rates), data.snb.ch (SARON and SNB policy rate), open-meteo.com (weather and place search), api.ipify.org (public IP, on click only) and itunes.apple.com (update check). No other connections — content is never transmitted.",
         "Freigeben": "Allow",
         "Damit BarBox hier speichern darf, den Ordner einmalig bestätigen.": "To let BarBox save here, confirm this folder once.",
         "Ordner nicht freigegeben — nichts gespeichert.": "Folder not allowed — nothing was saved.",

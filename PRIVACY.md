@@ -13,8 +13,8 @@ not usage statistics, not crash reports, not device identifiers.
 
 ## Network connections
 
-BarBox contacts exactly four public services, and only to display information
-you asked for. No account, cookie or identifier is sent with these requests.
+BarBox contacts six public services, and only to display information you asked
+for. No account, cookie or identifier is sent with these requests.
 
 | Service | Purpose | What is sent |
 |---|---|---|
@@ -22,6 +22,8 @@ you asked for. No account, cookie or identifier is sent with these requests.
 | `api.frankfurter.dev` | CHF → EUR/USD exchange rates | Nothing but the request itself |
 | `data.snb.ch` | Swiss SARON and SNB policy rate | Nothing but the request itself |
 | `api.ipify.org` | Your public IP address, shown on request | Nothing but the request itself; only contacted when you click the button |
+| `geocoding-api.open-meteo.com` | Looking up the fallback place you type in the settings | The place name you typed |
+| `itunes.apple.com` | Checking whether a newer version is in the App Store | Nothing but the app's bundle identifier; switchable off in the settings |
 
 The internet speed test (GitHub build only) uses Apple's built-in
 `networkQuality` tool and contacts Apple's measurement servers.

@@ -20,7 +20,7 @@ struct BarBoxMark: View {
 enum BarBoxIcon {
     /// Monochromes Menüleisten-Symbol; isTemplate lässt macOS die Farbe
     /// an helle/dunkle Menüleiste anpassen.
-    static func menuBarImage() -> NSImage {
+    static let menuBarImage: NSImage = {
         let size = NSSize(width: 18, height: 17)
         let image = NSImage(size: size, flipped: false) { rect in
             NSColor.black.setFill()
@@ -33,5 +33,5 @@ enum BarBoxIcon {
         image.isTemplate = true
         image.accessibilityDescription = "BarBox"
         return image
-    }
+    }()
 }

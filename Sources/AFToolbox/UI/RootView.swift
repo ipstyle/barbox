@@ -27,11 +27,24 @@ struct RootView: View {
         }
         return []
     }()
-    @AppStorage("windowWidth") private var windowWidth = 360.0
-    @AppStorage("windowHeight") private var windowHeight = 560.0
+    @AppStorage("windowWidth") private var windowWidth = WindowMetrics.defaultWidth
+    @AppStorage("windowHeight") private var windowHeight = WindowMetrics.defaultHeight
 
     // Einstellungen bekommen ein grösseres Fenster, damit alles gut lesbar ist
     private var isSettings: Bool { path.last == .settings }
+
+    /// Zielgrösse aus der gemeinsamen Rechenstelle. Der Popover bekommt exakt
+    /// denselben Wert gemeldet — sonst wird der Inhalt abgeschnitten.
+    private var desiredSize: CGSize {
+        WindowMetrics.contentSize(isSettings: isSettings,
+                                  width: windowWidth, height: windowHeight)
+    }
+
+    private func postSize() {
+        NotificationCenter.default.post(name: .afToolboxWindowSizeChanged,
+                                        object: nil,
+                                        userInfo: ["size": desiredSize])
+    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -55,14 +68,14 @@ struct RootView: View {
                     }
                 }
         }
-        .frame(width: isSettings ? max(windowWidth, 500) : windowWidth,
-               height: isSettings ? max(windowHeight, 660) : windowHeight)
+        .frame(width: desiredSize.width, height: desiredSize.height)
         .background(Theme.background)
+        .onAppear { postSize() }
+        .onChange(of: desiredSize) { _, _ in postSize() }
         // MenuBarExtra ignoriert preferredColorScheme — Umgebung direkt erzwingen,
         // sonst bleibt der Text im System-Hellmodus schwarz auf Anthrazit
         .environment(\.colorScheme, .dark)
         .preferredColorScheme(.dark)
         .tint(Color(red: 0.35, green: 0.62, blue: 1.0))
-        .animation(.easeInOut(duration: 0.15), value: isSettings)
     }
 }

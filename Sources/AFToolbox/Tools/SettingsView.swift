@@ -6,6 +6,7 @@ struct SettingsView: View {
     @EnvironmentObject private var favorites: FavoritesStore
     @EnvironmentObject private var status: SystemStatusModel
     @EnvironmentObject private var lang: LanguageStore
+    @EnvironmentObject private var updates: UpdateChecker
 
     @AppStorage("aiEdge") private var aiEdge = 1568
     @AppStorage("aiQuality") private var aiQuality = 0.80
@@ -13,8 +14,9 @@ struct SettingsView: View {
     @AppStorage("outputSuffix") private var outputSuffix = "-klein"
     @AppStorage("hiddenSettingsPanes") private var hiddenPanes = ""
     @AppStorage("dndShortcutName") private var dndShortcutName = ""
-    @AppStorage("windowWidth") private var windowWidth = 360.0
-    @AppStorage("windowHeight") private var windowHeight = 560.0
+    @AppStorage("windowWidth") private var windowWidth = WindowMetrics.defaultWidth
+    @AppStorage("windowHeight") private var windowHeight = WindowMetrics.defaultHeight
+    @AppStorage("updateAutoCheck") private var autoUpdateCheck = true
     @AppStorage("weatherPlace") private var weatherPlace = ""
     @State private var geocodeStatus: String?
 
@@ -54,10 +56,10 @@ struct SettingsView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         #if MAS_BUILD
                         aboutBlock(lang.t("Verbindungen"),
-                                   lang.t("Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter) sowie api.ipify.org (öffentliche IP, nur auf Klick). Sonst keine Verbindungen — Inhalte werden nie übertragen."))
+                                   lang.t("Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter und Ortssuche), api.ipify.org (öffentliche IP, nur auf Klick) sowie itunes.apple.com (Update-Prüfung). Sonst keine Verbindungen — Inhalte werden nie übertragen."))
                         #else
                         aboutBlock(lang.t("Verbindungen"),
-                                   lang.t("Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins) sowie api.ipify.org (öffentliche IP, nur auf Klick). Der Speedtest nutzt Apples eingebautes networkQuality. Sonst keine Verbindungen — Inhalte werden nie übertragen."))
+                                   lang.t("Nur zu api.frankfurter.dev (Währungskurse), data.snb.ch (SARON und SNB-Leitzins), open-meteo.com (Wetter und Ortssuche), api.ipify.org (öffentliche IP, nur auf Klick) sowie itunes.apple.com (Update-Prüfung). Der Speedtest nutzt Apples eingebautes networkQuality. Sonst keine Verbindungen — Inhalte werden nie übertragen."))
                         #endif
                         aboutBlock(lang.t("Lokal gelesen"),
                                    lang.t("Die App-Ordner (/Applications, ~/Applications) für die App-Liste — nur lesend. Bilder und PDFs nur, wenn du sie selbst hineinziehst."))
@@ -124,15 +126,44 @@ struct SettingsView: View {
             }
 
             Section(lang.t("Fenster")) {
-                Slider(value: $windowWidth, in: 360...520, step: 20) {
+                Slider(value: $windowWidth, in: WindowMetrics.minWidth...WindowMetrics.maxWidth, step: 20) {
                     Text(lang.t("Breite: ") + "\(Int(windowWidth)) px")
                 }
-                Slider(value: $windowHeight, in: 480...900, step: 20) {
+                Slider(value: $windowHeight, in: WindowMetrics.minHeight...WindowMetrics.maxHeight, step: 20) {
                     Text(lang.t("Höhe: ") + "\(Int(windowHeight)) px")
+                }
+                // Ein Regler, der über die Bildschirmhöhe hinaus nichts mehr
+                // bewirkt, wirkt sonst wie ein Fehler.
+                if windowHeight > WindowMetrics.usableHeight() {
+                    Text(lang.t("Auf diesen Bildschirm passen höchstens") + " \(Int(WindowMetrics.usableHeight())) px.")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.orange)
+                }
+                Button(lang.t("Auf Vorgabe zurücksetzen")) {
+                    windowWidth = WindowMetrics.defaultWidth
+                    windowHeight = WindowMetrics.defaultHeight
                 }
                 Text(lang.t("Die Höhe lässt sich auch direkt am Griff unten in der Fusszeile ziehen. Das Fenster bleibt offen, bis du erneut aufs Menüleisten-Symbol klickst."))
                     .font(.system(size: 10))
                     .foregroundStyle(.secondary)
+            }
+
+            Section(lang.t("Aktualisierung")) {
+                Toggle(lang.t("Beim Start auf neue Version prüfen"), isOn: $autoUpdateCheck)
+                HStack {
+                    Button(lang.t("Jetzt prüfen")) {
+                        Task { await updates.check() }
+                    }
+                    .disabled(updates.state == .checking)
+                    Text(updateStatusLine)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                }
+                if case .available(let version, let url) = updates.state {
+                    Button(lang.t("Version") + " \(version) " + lang.t("laden…")) {
+                        openSystemURL(url.absoluteString)
+                    }
+                }
             }
 
             Section(lang.t("Wetter")) {
@@ -234,6 +265,25 @@ struct SettingsView: View {
         .scrollContentBackground(.hidden)
         .background(Theme.background)
         .navigationTitle(lang.t("Einstellungen"))
+    }
+
+    private var updateStatusLine: String {
+        switch updates.state {
+        case .idle:
+            return lang.t("Noch nicht geprüft.")
+        case .checking:
+            return lang.t("Wird geprüft…")
+        case .upToDate:
+            if let last = updates.lastCheck {
+                let stamp = last.formatted(date: .abbreviated, time: .shortened)
+                return lang.t("Aktuell — geprüft ") + stamp
+            }
+            return lang.t("Aktuell.")
+        case .available(let version, _):
+            return lang.t("Version") + " \(version) " + lang.t("ist verfügbar.")
+        case .failed:
+            return lang.t("Prüfung nicht möglich (offline?).")
+        }
     }
 
     private func aboutBlock(_ title: String, _ text: String) -> some View {
