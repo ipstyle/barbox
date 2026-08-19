@@ -64,9 +64,30 @@ if [ "$MAS" = 1 ]; then
     fi
     # Sandbox-Signatur: Distribution-Zertifikat falls gesetzt, sonst Ad-hoc (lokaler Test)
     IDENTITY="${CODESIGN_IDENTITY:--}"
+
+    # Team-ID gehört nicht ins öffentliche Repo (Kontokennung). Sie kommt aus
+    # $TEAM_ID oder aus AppStore/team-id (beides lokal) und wird hier in eine
+    # temporäre Kopie der Entitlements geschrieben. Fehlt sie, wird ohne
+    # Identitäts-Entitlements signiert — reicht für lokale Ad-hoc-Tests.
+    ENTITLEMENTS="Resources/Toolbox-MAS.entitlements"
+    TEAM="${TEAM_ID:-}"
+    if [ -z "$TEAM" ] && [ -f AppStore/team-id ]; then
+        TEAM=$(tr -d '[:space:]' < AppStore/team-id)
+    fi
+    if [ -n "$TEAM" ]; then
+        BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" "$APP_STAGE/Contents/Info.plist")
+        ENTITLEMENTS="$STAGE/BarBox-MAS.entitlements"
+        cp Resources/Toolbox-MAS.entitlements "$ENTITLEMENTS"
+        /usr/libexec/PlistBuddy -c "Add :com.apple.application-identifier string $TEAM.$BUNDLE_ID" "$ENTITLEMENTS"
+        /usr/libexec/PlistBuddy -c "Add :com.apple.developer.team-identifier string $TEAM" "$ENTITLEMENTS"
+        echo "→ Team-ID ergänzt (lokale Quelle)"
+    else
+        echo "→ Keine Team-ID gesetzt — Signatur ohne Identitäts-Entitlements"
+    fi
+
     echo "→ Sandbox-Signatur mit «$IDENTITY»…"
     codesign --force --sign "$IDENTITY" \
-        --entitlements Resources/Toolbox-MAS.entitlements "$APP_STAGE"
+        --entitlements "$ENTITLEMENTS" "$APP_STAGE"
 else
     # Stabile Identität verwenden, falls vorhanden (verhindert TCC-Verlust bei Updates);
     # sonst Ad-hoc. Eigene Identität anlegbar via Schlüsselbundverwaltung →
