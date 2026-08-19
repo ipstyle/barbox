@@ -225,7 +225,7 @@ fertigen Build unter `Releases/<version>/AF-Toolbox.app` ab. Für eine neue Vers
 - Desktop-Zeile zuoberst im Menü (kürzere Mauswege)
 - Anthrazit-Design für die ganze App, zentral in Theme.swift (Vorlage für weitere Apps)
 - Einstellungen in grösserem Fenster (500×660) mit Info-Bereich: Icon, Slogan,
-  Version/Build, Security-Vermerk (Claude Fable 5)
+  Version/Build, Security-Vermerk
 - Review-Fixes: tmutil-Statusprüfung, robusteres Popover-Schliessen,
   Hauptbildschirm-Präferenz bei mehreren Displays, App-Listen-Zeilen entflochten
 - build.sh nutzt stabile Signatur-Identität «AF-Toolbox Dev», falls vorhanden

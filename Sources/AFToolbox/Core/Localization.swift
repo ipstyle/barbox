@@ -308,7 +308,7 @@ enum L10n {
         "Einstellungen in den macOS-Vorgaben, App-Favoriten unter ~/Library/Application Support/BarBox. Keine Zugangsdaten, keine Inhalte. Der Zwischenablage-Verlauf bleibt nur im Arbeitsspeicher und verschwindet beim Beenden.": "Settings in macOS defaults, app favorites under ~/Library/Application Support/BarBox. No credentials, no content. The clipboard history stays in memory only and disappears on quit.",
         "Freigaben": "Permissions",
         "Bluetooth (Schalter via blueutil), Mitteilungen (Timer), Automation (Hell/Dunkel-Umschalter). Jede Freigabe wird erst beim ersten Gebrauch angefragt.": "Bluetooth (switch via blueutil), notifications (timer), automation (light/dark toggle), location (weather). Each permission is requested on first use only.",
-        "Sicherheit geprüft · Code-Review mit Claude Fable 5": "Security checked · code review with Claude Fable 5",
+        "Sicherheit geprüft · unabhängiges Code-Review": "Security checked · independent code review",
         "Durchgang am 10. August 2026 (1.2) — Fokus: Shell-Aufrufe, API-Nutzung, Freigaben, Parsing.": "Pass on August 10, 2026 (1.2) — focus: shell calls, API usage, permissions, parsing.",
 
         // Nachträge aus der Umstellung

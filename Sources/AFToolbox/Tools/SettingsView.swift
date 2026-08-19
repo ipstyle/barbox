@@ -77,7 +77,7 @@ struct SettingsView: View {
 
                     Divider().padding(.vertical, 6)
 
-                    Label(lang.t("Sicherheit geprüft · Code-Review mit Claude Fable 5"), systemImage: "checkmark.shield.fill")
+                    Label(lang.t("Sicherheit geprüft · unabhängiges Code-Review"), systemImage: "checkmark.shield.fill")
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(Theme.green)
                     Text(lang.t("Durchgang am 10. August 2026 (1.2) — Fokus: Shell-Aufrufe, API-Nutzung, Freigaben, Parsing."))
