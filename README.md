@@ -7,7 +7,7 @@ A free, open-source **menu bar toolbox for macOS** — everything one click away
 **English and German UI** — English by default, switchable in the settings.
 
 <p align="center">
-  <img src="docs/menubar.jpg" alt="BarBox icon in the menu bar" width="280">
+  <img src="docs/img/toolbar.jpg" alt="BarBox icon in the menu bar" width="280">
 </p>
 <p align="center">
   <img src="docs/dashboard-en.jpg" alt="Dashboard (English UI) with CPU/MEM/GPU stats, status chips, sliders, favorites, tools and weather" width="360">
