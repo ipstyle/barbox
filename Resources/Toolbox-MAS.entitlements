@@ -5,7 +5,8 @@
 	<!-- Die App-Identität (application-identifier / team-identifier)
 	     steht bewusst NICHT hier:
 	     die Team-ID ist eine Kontokennung des jeweiligen Entwicklers.
-	     build.sh --mas ergänzt sie beim Signieren aus $TEAM_ID oder aus
+	     «build.sh mit der Option mas» ergänzt sie beim Signieren aus
+	     $TEAM_ID oder aus
 	     der lokalen Datei AppStore/team-id. Wer forkt, setzt die eigene. -->
 
 	<!-- Pflicht im Mac App Store -->
