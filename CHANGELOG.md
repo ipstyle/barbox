@@ -1,5 +1,64 @@
 # BarBox — Changelog / Änderungsprotokoll
 
+## 2.1 — 19.08.2026
+
+- **Fixed: the settings screen was cut off** the first time you opened it. The
+  popover took its size from an animation still in progress and never corrected
+  itself; you had to close and reopen to see the full width. Window size is now
+  set explicitly, which also means the width and height sliders take effect
+  immediately while the window is open. / **Behoben: Die Einstellungen waren
+  beim ersten Öffnen abgeschnitten.** Das Fenster übernahm einen Zwischenwert
+  einer laufenden Animation und korrigierte sich nie — man musste schliessen und
+  neu öffnen. Die Fenstergrösse wird jetzt ausdrücklich gesetzt; damit wirken
+  auch die Schieberegler sofort, während das Fenster offen ist.
+- **Menu bar icon: several causes of it disappearing are fixed.** The item now
+  has its own autosave name, is made visible again at every launch, and restores
+  itself after a display change, waking from sleep or a user switch. If the icon
+  is ever missing anyway, start BarBox again from Spotlight or the Dock — the
+  running app puts it back and opens the window. **Honest limit:** when macOS
+  hides the icon because the menu bar is full (many icons plus a notch), no app
+  can override that; moving the icon closer to the clock helps. / **Menüleisten-
+  Symbol: Mehrere Ursachen fürs Verschwinden sind behoben.** Das Symbol hat neu
+  einen eigenen Speicherplatz, wird bei jedem Start wieder sichtbar gemacht und
+  stellt sich nach Displaywechsel, Aufwachen oder Benutzerwechsel selbst wieder
+  her. Fehlt es trotzdem einmal: BarBox einfach nochmals aus Spotlight oder dem
+  Dock starten — die laufende App holt das Symbol zurück und öffnet das Fenster.
+  **Ehrliche Grenze:** Blendet macOS das Symbol wegen voller Menüleiste aus
+  (viele Symbole plus Notch), kann das keine App überstimmen; hilfreich ist, das
+  Symbol näher zur Uhr zu schieben.
+- **The window can now be up to 1500 px tall** (was 900), and the default for a
+  fresh install is 900 (was 560). The height is capped to what the current
+  screen actually fits, so a tall window does not run off a smaller display —
+  a note under the slider says so when that happens. There is also a «reset to
+  default» button now. Anyone who was still on the old default of 560 is moved
+  to 900 once; a height you chose yourself is left alone. / **Das Fenster darf
+  neu bis 1500 px hoch sein** (vorher 900), Vorgabe bei Neuinstallation ist 900
+  (vorher 560). Die Höhe wird auf das begrenzt, was der aktuelle Bildschirm
+  hergibt — ein Hinweis unter dem Regler sagt es, wenn das greift. Dazu gibt es
+  neu «Auf Vorgabe zurücksetzen». Wer noch auf der alten Vorgabe 560 stand, wird
+  einmalig auf 900 gehoben; eine selbst gewählte Höhe bleibt unangetastet.
+- **New: update check.** BarBox asks the App Store once a day whether a newer
+  version is out, and shows a small arrow in the header only if there really is
+  one. Settings has a «check now» button and a switch to turn the automatic
+  check off. This adds one host, `itunes.apple.com`, and nothing about you is
+  sent — only the app's bundle identifier. / **Neu: Update-Prüfung.** BarBox
+  fragt einmal täglich im App Store nach, ob eine neuere Fassung da ist, und
+  zeigt nur dann einen kleinen Pfeil im Kopfbereich, wenn es wirklich eine gibt.
+  In den Einstellungen gibt es «Jetzt prüfen» und einen Schalter, um die
+  automatische Prüfung abzuschalten. Dazu kommt ein Server hinzu,
+  `itunes.apple.com`; gesendet wird nichts über dich, nur die Kennung der App.
+- Corrected in the privacy notes: BarBox has always contacted
+  `geocoding-api.open-meteo.com` when you look up a fallback place in the
+  settings, but every document said «exactly four hosts». The list now names all
+  six — in the app, the README, the privacy policy and on the website. / In den
+  Datenschutzangaben richtiggestellt: BarBox kontaktiert seit jeher
+  `geocoding-api.open-meteo.com`, wenn man in den Einstellungen einen Ort sucht
+  — überall stand aber «genau vier Server». Die Liste nennt jetzt alle sechs, in
+  der App, im README, in der Datenschutzerklärung und auf der Website.
+- The website has a new **«What's new»** section, so you can see what changed
+  before downloading. / Die Website hat neu einen Abschnitt **«Was ist neu»** —
+  damit man vor dem Laden sieht, was sich geändert hat.
+
 ## 2.0 — 16.08.2026
 
 - **Rebranded to BarBox** (formerly Toolbox/AF-Toolbox). New app icon ("bar over

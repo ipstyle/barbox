@@ -12,9 +12,10 @@ struct DashboardView: View {
     @EnvironmentObject private var timerManager: TimerManager
     @EnvironmentObject private var stats: StatsModel
     @EnvironmentObject private var weather: WeatherModel
+    @EnvironmentObject private var updates: UpdateChecker
 
     @AppStorage("dndShortcutName") private var dndShortcutName = ""
-    @AppStorage("windowHeight") private var windowHeight = 560.0
+    @AppStorage("windowHeight") private var windowHeight = WindowMetrics.defaultHeight
 
     @State private var dropHover = false
 
@@ -210,6 +211,14 @@ struct DashboardView: View {
             Spacer(minLength: 4)
             statsInline
             Spacer(minLength: 4)
+            if case .available = updates.state {
+                Button { path.append(Route.settings) } label: {
+                    Image(systemName: "arrow.down.circle.fill").font(.system(size: 13))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Theme.blue)
+                .help(lang.t("Neue Version verfügbar — Einstellungen öffnen"))
+            }
             Button { path.append(Route.appList) } label: {
                 Image(systemName: "magnifyingglass").font(.system(size: 13))
             }
@@ -738,7 +747,9 @@ struct DashboardView: View {
                     DragGesture(coordinateSpace: .global)
                         .onChanged { value in
                             if dragBaseHeight == nil { dragBaseHeight = windowHeight }
-                            windowHeight = min(900, max(480, (dragBaseHeight ?? windowHeight) + value.translation.height))
+                            windowHeight = min(WindowMetrics.maxHeight,
+                                               max(WindowMetrics.minHeight,
+                                                   (dragBaseHeight ?? windowHeight) + value.translation.height))
                         }
                         .onEnded { _ in dragBaseHeight = nil }
                 )
