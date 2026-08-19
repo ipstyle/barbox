@@ -64,6 +64,20 @@ jobs:
           fi
           echo "Persönliche Daten: keine Treffer."
 
+      # Apple-Kontodaten (Team-ID, App-Identität, ASC-Schlüssel) gehören in die
+      # lokale Konfiguration, nie ins öffentliche Repo. Geprüft wird der
+      # Arbeitsbaum, nicht die History — gesucht wird die Form, nicht ein Wert.
+      - name: Apple-Kontodaten im Arbeitsbaum suchen
+        run: |
+          # Gesucht werden gesetzte WERTE, nicht der blosse Schlüsselname —
+          # build.sh muss ihn nennen dürfen, um ihn lokal zu ergänzen.
+          PAT='[A-Z0-9]{10}\.com\.ip-style|team-identifier</key>|issuer_id|AuthKey_[A-Z0-9]+\.p8'
+          if git grep -nE "$PAT" -- . ':(exclude).github/workflows/*'; then
+            echo "::error::Apple-Kontodaten im Repo gefunden — gehören in die lokale Konfiguration."
+            exit 1
+          fi
+          echo "Apple-Kontodaten: keine Treffer."
+
       - name: Commit-Autoren prüfen
         run: |
           BAD=$(git log --all --format='%ae' | sort -u | grep -v '@users.noreply.github.com' || true)

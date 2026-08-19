@@ -4,167 +4,459 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BarBox — a toolbox in your menu bar</title>
-<meta name="description" content="BarBox is a free, open-source menu bar toolbox: live CPU, memory and GPU stats, image compression, OCR, PDF merge, timer, weather and finance — no accounts, no tracking.">
+<meta name="description" content="BarBox is a free, open-source menu bar toolbox for macOS: live CPU, memory and GPU stats, image compression, OCR, PDF merge, timer, weather and rates. No accounts, no tracking.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BarBox — a toolbox in your menu bar">
+<meta property="og:description" content="Free and open source. Live stats, image and PDF tools, weather and rates — one click away. No accounts, no tracking.">
+<meta property="og:url" content="https://ipstyle.github.io/barbox/">
+<meta property="og:image" content="https://ipstyle.github.io/barbox/appicon.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root {
     color-scheme: light dark;
-    --bg: #ffffff; --fg: #16181d; --muted: #5d636e; --line: #e3e6ea;
-    --card: #f7f8fa; --accent: #2e6be6; --accent-fg: #ffffff;
+    --bg:#ffffff; --fg:#16181d; --muted:#5d636e; --line:#e3e6ea;
+    --card:#f7f8fa; --accent:#2e6be6; --accent-fg:#ffffff;
+    --strip:#ffffff; --strip-o:.72; --knock:#f7f8fa;
+    --hero1:#f7f8fa; --hero2:#eaeef4; --glow:.16;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #14161a; --fg: #e9eaee; --muted: #a0a6b0; --line: #2a2e36;
-            --card: #1c1f25; --accent: #5b8dfa; --accent-fg: #0d1016; }
+    :root { --bg:#14161a; --fg:#e9eaee; --muted:#a0a6b0; --line:#2a2e36;
+            --card:#1c1f25; --accent:#5b8dfa; --accent-fg:#0d1016;
+            --strip:#0f1115; --strip-o:.55; --knock:#14161a;
+            --hero1:#1c1f25; --hero2:#14161a; --glow:.22; }
   }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--fg);
-         font: 16px/1.6 -apple-system, "Helvetica Neue", system-ui, sans-serif; }
-  .wrap { max-width: 940px; margin: 0 auto; padding: 0 1.25rem; }
-  header { text-align: center; padding: 4rem 0 2.5rem; }
-  .icon { width: 104px; height: 104px; border-radius: 24px; display: block; margin: 0 auto 1.2rem; }
-  h1 { font-size: 2.4rem; margin: 0 0 .3rem; letter-spacing: -.02em; }
-  .tagline { font-size: 1.15rem; color: var(--muted); margin: 0 0 1.8rem; }
-  .badges { display: flex; gap: .5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.8rem; }
-  .badge { font-size: .8rem; color: var(--muted); border: 1px solid var(--line);
-           border-radius: 999px; padding: .25rem .8rem; }
-  .cta { display: inline-block; background: var(--accent); color: var(--accent-fg);
-         text-decoration: none; font-weight: 600; padding: .8rem 1.6rem;
-         border-radius: 10px; margin: 0 .3rem .6rem; }
-  .cta.secondary { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-  h2 { font-size: 1.35rem; margin: 3rem 0 1rem; padding-bottom: .4rem; border-bottom: 1px solid var(--line); }
-  .shots { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: .6rem; }
-  .shots img { height: 460px; border-radius: 12px; border: 1px solid var(--line); flex: 0 0 auto; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; }
-  .card h3 { margin: 0 0 .4rem; font-size: 1rem; }
-  .card p, .card ul { margin: 0; color: var(--muted); font-size: .92rem; }
-  .card ul { padding-left: 1.1rem; }
-  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
-  th, td { text-align: left; padding: .5rem .6rem; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--muted); font-weight: 600; }
-  code { background: var(--card); border: 1px solid var(--line); border-radius: 5px;
-         padding: .1rem .35rem; font-size: .85em; }
-  pre { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
-        padding: .9rem 1rem; overflow-x: auto; font-size: .85rem; }
-  footer { margin: 4rem 0 3rem; padding-top: 1.5rem; border-top: 1px solid var(--line);
-           color: var(--muted); font-size: .88rem; text-align: center; }
-  footer a { color: var(--muted); }
-  a { color: var(--accent); }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; background:var(--bg); color:var(--fg);
+         font:16px/1.6 -apple-system, "Helvetica Neue", system-ui, sans-serif;
+         -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:940px; margin:0 auto; padding:0 1.25rem; }
+  a { color:var(--accent); }
+
+  /* top bar: back link + language toggle */
+  .top { display:flex; align-items:center; justify-content:space-between; gap:1rem;
+         padding:1rem 0 .4rem; flex-wrap:wrap; }
+  .back { color:var(--muted); text-decoration:none; font-size:.86rem; font-weight:600; }
+  .back:hover { color:var(--accent); }
+  .lang { display:flex; gap:.25rem; border:1px solid var(--line); border-radius:999px;
+          padding:.2rem; background:var(--card); }
+  .lang button { border:0; background:none; color:var(--muted); font:600 .8rem/1 inherit;
+                 padding:.4rem .7rem; border-radius:999px; cursor:pointer; }
+  .lang button[aria-pressed="true"] { background:var(--accent); color:var(--accent-fg); }
+
+  /* hero */
+  header { padding:0 0 2.4rem; }
+  .hero { position:relative; overflow:hidden; border:1px solid var(--line); border-radius:18px;
+          background:linear-gradient(180deg, var(--hero1), var(--hero2));
+          padding:3.4rem 1.4rem 2.6rem; text-align:center; }
+  .hero::before { content:""; position:absolute; inset:0 0 auto 0; height:34px;
+                  background:var(--strip); opacity:var(--strip-o);
+                  border-bottom:1px solid var(--line); }
+  .hero::after { content:""; position:absolute; left:50%; bottom:-45%; width:120%; height:110%;
+                 transform:translateX(-50%); opacity:var(--glow); pointer-events:none;
+                 background:radial-gradient(closest-side, var(--accent), transparent); }
+  .strip { position:absolute; top:0; left:0; right:0; height:34px; display:flex;
+           align-items:center; justify-content:space-between; gap:.6rem;
+           padding:0 .8rem; font-size:.72rem; font-weight:600; color:var(--muted); z-index:1; }
+  .strip b { color:var(--fg); font-weight:700; }
+  .hero > .inner { position:relative; z-index:1; }
+  .hero img.icon { width:76px; height:76px; border-radius:17px; display:block;
+                   margin:0 auto 1rem; }
+  h1 { font-size:2.2rem; letter-spacing:-.02em; margin:0 0 .3rem; }
+  .tagline { font-size:1.15rem; color:var(--muted); margin:0 auto; max-width:30em; }
+
+  .badges { display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; margin:1.6rem 0 1.4rem; }
+  .badge { font-size:.8rem; color:var(--muted); border:1px solid var(--line);
+           border-radius:999px; padding:.25rem .8rem; }
+
+  /* calls to action */
+  .actions { display:flex; flex-wrap:wrap; gap:.8rem; align-items:center;
+             justify-content:center; margin:0 0 1.1rem; }
+  .mas { display:inline-block; padding:10px 0; }
+  .mas img { width:156px; height:auto; display:block; }
+  .cta { display:inline-block; text-decoration:none; font-weight:600; font-size:.94rem;
+         padding:.7rem 1.2rem; border-radius:10px; color:var(--accent);
+         border:1px solid var(--line); background:var(--card); }
+  .cta:hover { border-color:var(--accent); }
+  .store-note { text-align:center; color:var(--muted); font-size:.84rem; margin:0 0 1.6rem; }
+
+  /* trust pills */
+  .trust { display:flex; flex-wrap:wrap; gap:.55rem; justify-content:center; margin:0; }
+  .trust-pill { display:inline-flex; align-items:center; gap:.5rem;
+                background:var(--card); border:1px solid var(--line); border-radius:999px;
+                padding:.4rem .95rem .4rem .5rem; font-size:.86rem; font-weight:600; color:var(--fg); }
+  .trust-pill svg { width:19px; height:19px; flex:0 0 auto; }
+  .trust-pill svg circle { fill:var(--accent); }
+  .trust-pill svg path { fill:none; stroke:var(--accent-fg); stroke-width:1.7;
+                         stroke-linecap:round; stroke-linejoin:round; }
+
+  /* sections */
+  section { padding:2.6rem 0; border-top:1px solid var(--line); }
+  h2 { font-size:1.5rem; letter-spacing:-.02em; margin:0 0 .4rem; }
+  .sub { color:var(--muted); margin:0 0 1.8rem; }
+
+  .grid { display:grid; gap:1.25rem; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:1.25rem 1.35rem; }
+  .card h3 { margin:0 0 .35rem; font-size:1.05rem; }
+  .card p, .card ul { margin:0; color:var(--muted); font-size:.94rem; }
+  .card ul { padding-left:1.1rem; }
+  .card ul li { margin-bottom:.25rem; }
+
+  /* screenshots */
+  .shots { display:flex; gap:1rem; overflow-x:auto; padding-bottom:.6rem; scroll-snap-type:x mandatory; }
+  .shots figure { margin:0; flex:0 0 auto; scroll-snap-align:start; }
+  .shots img { height:340px; width:auto; border-radius:10px; border:1px solid var(--line); display:block; }
+  .shots figcaption { font-size:.8rem; color:var(--muted); margin-top:.5rem; }
+
+  /* text columns */
+  .cols { display:grid; gap:1.25rem 2rem; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); }
+  .cols h3 { font-size:1rem; margin:0 0 .3rem; }
+  .cols p { color:var(--muted); margin:0; font-size:.94rem; }
+
+  ol { color:var(--muted); font-size:.94rem; padding-left:1.2rem; }
+  ol li { margin-bottom:.3rem; }
+  ol li b, .cols p b { color:var(--fg); }
+
+  .scroll { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; font-size:.92rem; min-width:22rem; }
+  th, td { text-align:left; padding:.55rem .6rem; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { color:var(--muted); font-weight:600; }
+  code { background:var(--card); border:1px solid var(--line); border-radius:5px;
+         padding:.05rem .3rem; font-size:.88em; }
+  pre { background:var(--card); border:1px solid var(--line); border-radius:10px;
+        padding:.9rem 1rem; overflow-x:auto; font-size:.85rem; margin:0 0 1rem; }
+
+  footer { border-top:1px solid var(--line); padding:2rem 0 3rem; color:var(--muted); font-size:.85rem; }
+  footer a { color:var(--muted); }
+  footer p { margin:0 0 .5rem; }
 </style>
 </head>
 <body>
+
 <div class="wrap">
 
-<header>
-  <img class="icon" src="appicon.png" alt="BarBox app icon">
-  <h1>BarBox</h1>
-  <p class="tagline">Your everyday toolbox — one click away in the menu bar.</p>
-  <div class="badges">
-    <span class="badge">macOS 14 or later</span>
-    <span class="badge">Free</span>
-    <span class="badge">On the Mac App Store</span>
-    <span class="badge">Open source · GPL-3.0</span>
-    <span class="badge">No accounts · no tracking</span>
+<div class="top">
+  <a class="back" href="https://ipstyle.github.io"
+     data-en="&#8592; All apps by ipstyle" data-de="&#8592; Alle Apps von ipstyle">&#8592; All apps by ipstyle</a>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" data-lang="de" aria-pressed="false">DE</button>
   </div>
-  <a class="cta" href="https://apps.apple.com/app/id6802093315">Get it on the Mac App Store</a>
-  <a class="cta secondary" href="https://github.com/ipstyle/barbox/releases/latest">Direct download</a>
-  <a class="cta secondary" href="https://github.com/ipstyle/barbox">Source on GitHub</a>
+</div>
+
+<header>
+  <div class="hero">
+    <div class="strip" aria-hidden="true">
+      <span><b>BarBox</b></span>
+      <span>CPU 12%&nbsp; MEM 58%&nbsp; GPU 4%&nbsp; 9:41</span>
+    </div>
+    <div class="inner">
+      <img class="icon" src="appicon.png" alt="BarBox app icon">
+      <h1>BarBox</h1>
+      <p class="tagline"
+         data-en="Your everyday toolbox — one click away in the menu bar."
+         data-de="Deine Werkzeugkiste f&uuml;r jeden Tag — einen Klick entfernt in der Men&uuml;leiste.">Your everyday toolbox — one click away in the menu bar.</p>
+    </div>
+  </div>
+
+  <div class="badges">
+    <span class="badge">macOS 14+</span>
+    <span class="badge" data-en="Free" data-de="Gratis">Free</span>
+    <span class="badge" data-en="English &amp; German" data-de="Deutsch &amp; Englisch">English &amp; German</span>
+    <span class="badge" data-en="Swift &amp; SwiftUI" data-de="Swift &amp; SwiftUI">Swift &amp; SwiftUI</span>
+    <span class="badge" data-en="Switzerland" data-de="Schweiz">Switzerland</span>
+  </div>
+
+  <div class="actions">
+    <a class="mas" href="https://apps.apple.com/app/id6802093315">
+      <picture>
+        <source id="badge-dark" media="(prefers-color-scheme: dark)" srcset="img/mas-badge-dark.svg">
+        <img id="badge-light" src="img/mas-badge-light.svg" width="156"
+             alt="Download BarBox on the Mac App Store">
+      </picture>
+    </a>
+    <a class="cta" href="https://github.com/ipstyle/barbox/releases/latest"
+       data-en="Direct download" data-de="Direkt herunterladen">Direct download</a>
+    <a class="cta" href="https://github.com/ipstyle/barbox"
+       data-en="Source on GitHub" data-de="Quellcode auf GitHub">Source on GitHub</a>
+  </div>
+  <p class="store-note"
+     data-en="Listed in the App&nbsp;Store as &#8220;BarBox Tools&#8221; &#183; free, no subscription, no in-app purchases"
+     data-de="Im App&nbsp;Store gelistet als &#8220;BarBox Tools&#8221; &#183; gratis, kein Abo, keine In-App-K&auml;ufe">Listed in the App&nbsp;Store as &#8220;BarBox Tools&#8221; &#183; free, no subscription, no in-app purchases</p>
+
+  <div class="trust" role="list" aria-label="Security commitments">
+    <span class="trust-pill" role="listitem">
+      <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="9"/><path d="M5.2 9.2l2.3 2.3 5.3-5.5"/></svg>
+      <span data-en="Mac App Store — Sandboxed" data-de="Mac App Store — Sandboxed">Mac App Store — Sandboxed</span>
+    </span>
+    <span class="trust-pill" role="listitem">
+      <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="9"/><path d="M5.2 9.2l2.3 2.3 5.3-5.5"/></svg>
+      <span data-en="No Analytics &#183; No Accounts &#183; No Ads" data-de="Keine Analyse &#183; Keine Konten &#183; Keine Werbung">No Analytics &#183; No Accounts &#183; No Ads</span>
+    </span>
+    <span class="trust-pill" role="listitem">
+      <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="9"/><path d="M5.2 9.2l2.3 2.3 5.3-5.5"/></svg>
+      <span data-en="Open Source &#183; GPL-3.0" data-de="Quelloffen &#183; GPL-3.0">Open Source &#183; GPL-3.0</span>
+    </span>
+    <span class="trust-pill" role="listitem">
+      <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="9"/><path d="M5.2 9.2l2.3 2.3 5.3-5.5"/></svg>
+      <span data-en="No third-party SDKs" data-de="Keine Fremd-SDKs">No third-party SDKs</span>
+    </span>
+    <span class="trust-pill" role="listitem">
+      <svg viewBox="0 0 18 18" aria-hidden="true"><circle cx="9" cy="9" r="9"/><path d="M5.2 9.2l2.3 2.3 5.3-5.5"/></svg>
+      <span data-en="Every network host named" data-de="Jeder Server namentlich genannt">Every network host named</span>
+    </span>
+  </div>
 </header>
 
-<h2>What it looks like</h2>
-<div class="shots">
-  <img src="dashboard-en.jpg" alt="BarBox dashboard with stats, favorites, tools and weather">
-  <img src="about.jpg" alt="BarBox settings and about section">
-  <img src="dashboard-de.jpg" alt="BarBox dashboard with German interface">
-</div>
-
-<h2>What it does</h2>
-<div class="grid">
-  <div class="card">
-    <h3>Live stats</h3>
-    <p>CPU, memory and GPU usage right in the header. Battery, Wi-Fi and Bluetooth status at a glance.</p>
+<section id="features">
+  <h2 data-en="What it does" data-de="Was es kann">What it does</h2>
+  <p class="sub"
+     data-en="One window, everything you reach for a dozen times a day."
+     data-de="Ein Fenster f&uuml;r all das, wonach man zw&ouml;lfmal am Tag greift.">One window, everything you reach for a dozen times a day.</p>
+  <div class="grid">
+    <div class="card">
+      <h3 data-en="Live stats" data-de="Live-Werte">Live stats</h3>
+      <p data-en="CPU, memory and GPU usage right in the header. Battery, Wi-Fi and Bluetooth status at a glance, each as a dropdown."
+         data-de="CPU-, Speicher- und GPU-Auslastung direkt im Kopfbereich. Batterie, WLAN und Bluetooth auf einen Blick, jedes als Men&uuml;.">CPU, memory and GPU usage right in the header. Battery, Wi-Fi and Bluetooth status at a glance, each as a dropdown.</p>
+    </div>
+    <div class="card">
+      <h3 data-en="Files &amp; text" data-de="Dateien &amp; Text">Files &amp; text</h3>
+      <ul>
+        <li data-en="Image compression (AI preset, half size)" data-de="Bilder verkleinern (AI-Vorgabe, halbe Gr&ouml;sse)">Image compression (AI preset, half size)</li>
+        <li data-en="Text from image — OCR, on-device" data-de="Text aus Bild — OCR, auf dem Ger&auml;t">Text from image — OCR, on-device</li>
+        <li data-en="Merge PDFs, batch rename, QR codes" data-de="PDFs zusammenf&uuml;gen, Stapel-Umbenennen, QR-Codes">Merge PDFs, batch rename, QR codes</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 data-en="Everyday helpers" data-de="Helfer f&uuml;r jeden Tag">Everyday helpers</h3>
+      <ul>
+        <li data-en="Keep awake, timer with notification" data-de="Wachhalten, Timer mit Mitteilung">Keep awake, timer with notification</li>
+        <li data-en="Clipboard history (memory only)" data-de="Zwischenablage-Verlauf (nur im Speicher)">Clipboard history (memory only)</li>
+        <li data-en="Password and UUID generator" data-de="Passwort- und UUID-Generator">Password and UUID generator</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 data-en="Info at a glance" data-de="Infos auf einen Blick">Info at a glance</h3>
+      <ul>
+        <li data-en="Local and public IP, speed test" data-de="Lokale und &ouml;ffentliche IP, Speedtest">Local and public IP, speed test</li>
+        <li data-en="CHF &#8594; EUR/USD, SARON, SNB policy rate" data-de="CHF &#8594; EUR/USD, SARON, SNB-Leitzins">CHF &#8594; EUR/USD, SARON, SNB policy rate</li>
+        <li data-en="Weather with a 5-day forecast" data-de="Wetter mit 5-Tage-Vorhersage">Weather with a 5-day forecast</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 data-en="Your layout" data-de="Dein Aufbau">Your layout</h3>
+      <p data-en="Favorites, app launcher, volume and audio output. Every section collapsible and reorderable, window size adjustable."
+         data-de="Favoriten, App-Starter, Lautst&auml;rke und Audio-Ausgabe. Jeder Bereich einklappbar und verschiebbar, Fenstergr&ouml;sse einstellbar.">Favorites, app launcher, volume and audio output. Every section collapsible and reorderable, window size adjustable.</p>
+    </div>
+    <div class="card">
+      <h3 data-en="Two languages" data-de="Zwei Sprachen">Two languages</h3>
+      <p data-en="English and German interface, switchable in the settings — takes effect immediately, no restart."
+         data-de="Englische und deutsche Oberfl&auml;che, in den Einstellungen umschaltbar — wirkt sofort, ohne Neustart.">English and German interface, switchable in the settings — takes effect immediately, no restart.</p>
+    </div>
   </div>
-  <div class="card">
-    <h3>Files &amp; text</h3>
-    <ul>
-      <li>Image compression (AI preset, half size)</li>
-      <li>Text from image (OCR, on-device)</li>
-      <li>Merge PDFs, batch rename, QR codes</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Everyday helpers</h3>
-    <ul>
-      <li>Keep awake, timer with notification</li>
-      <li>Clipboard history (memory only)</li>
-      <li>Password and UUID generator</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Info at a glance</h3>
-    <ul>
-      <li>Local and public IP</li>
-      <li>CHF → EUR/USD, SARON, SNB policy rate</li>
-      <li>Weather with 5-day forecast</li>
-    </ul>
-  </div>
-  <div class="card">
-    <h3>Your layout</h3>
-    <p>Favorites, app launcher, volume and audio output. Every section collapsible and reorderable, window size adjustable.</p>
-  </div>
-  <div class="card">
-    <h3>Two languages</h3>
-    <p>English and German interface, switchable in the settings — takes effect immediately.</p>
-  </div>
-</div>
+</section>
 
-<h2>Install</h2>
-<p><b>From the Mac App Store</b> — sandboxed, signed by Apple, updates automatically:
-<a href="https://apps.apple.com/app/id6802093315">apps.apple.com</a></p>
-<p><b>Or directly from GitHub</b> — same app, plus the extras the sandbox does not
-allow (display brightness, Wi-Fi and Bluetooth switches, AirDrop, Time Machine,
-speed test):</p>
-<ol>
-  <li>Download <code>BarBox-x.y.zip</code> from the <a href="https://github.com/ipstyle/barbox/releases/latest">latest release</a> and unzip it.</li>
-  <li>Move <code>BarBox.app</code> to your Applications folder.</li>
-  <li>First launch: the GitHub build is not notarized — right-click the app → <b>Open</b> → <b>Open</b>. Alternatively:</li>
-</ol>
-<pre>xattr -d com.apple.quarantine /Applications/BarBox.app</pre>
+<section id="shots">
+  <h2 data-en="What it looks like" data-de="Wie es aussieht">What it looks like</h2>
+  <p class="sub"
+     data-en="Scroll sideways. Real screenshots, nothing staged."
+     data-de="Seitlich scrollen. Echte Bildschirmfotos, nichts gestellt.">Scroll sideways. Real screenshots, nothing staged.</p>
+  <div class="shots">
+    <figure>
+      <img src="dashboard-en.jpg" alt="BarBox dashboard with stats, controls, favorites, tools and weather">
+      <figcaption data-en="Dashboard &#183; English" data-de="&Uuml;bersicht &#183; Englisch">Dashboard &#183; English</figcaption>
+    </figure>
+    <figure>
+      <img src="dashboard-de.jpg" alt="BarBox dashboard with the German interface">
+      <figcaption data-en="Dashboard &#183; German" data-de="&Uuml;bersicht &#183; Deutsch">Dashboard &#183; German</figcaption>
+    </figure>
+    <figure>
+      <img src="about.jpg" alt="BarBox settings and about section">
+      <figcaption data-en="Settings &#183; about" data-de="Einstellungen &#183; Info">Settings &#183; about</figcaption>
+    </figure>
+    <figure>
+      <img src="menubar.jpg" alt="The BarBox icon sitting in the macOS menu bar">
+      <figcaption data-en="In the menu bar" data-de="In der Men&uuml;leiste">In the menu bar</figcaption>
+    </figure>
+  </div>
+</section>
 
-<h2>Permissions</h2>
-<table>
-  <tr><th>Feature</th><th>Permission</th></tr>
-  <tr><td>Weather</td><td>Location — or set a fallback place in the settings</td></tr>
-  <tr><td>Timer</td><td>Notifications</td></tr>
-  <tr><td>Light/dark toggle, Focus</td><td>Automation (System Events / Shortcuts)</td></tr>
-  <tr><td>Bluetooth toggle</td><td><a href="https://github.com/toy/blueutil">blueutil</a> plus Bluetooth permission</td></tr>
-</table>
-<p style="color:var(--muted);font-size:.92rem">Every permission is requested only when the matching feature is used for the first time.</p>
+<section id="install">
+  <h2 data-en="Install" data-de="Installieren">Install</h2>
+  <p class="sub"
+     data-en="Two ways to get it — same source code, one difference."
+     data-de="Zwei Wege zur App — derselbe Quellcode, ein Unterschied.">Two ways to get it — same source code, one difference.</p>
+  <div class="grid">
+    <div class="card">
+      <h3 data-en="From the Mac App Store" data-de="Aus dem Mac App Store">From the Mac App Store</h3>
+      <p data-en-html="Sandboxed, signed by Apple, updates by itself. The recommended way for most people. &lt;a href=&quot;https://apps.apple.com/app/id6802093315&quot;&gt;Open in the App Store &#8594;&lt;/a&gt;"
+         data-de-html="In der Sandbox, von Apple signiert, aktualisiert sich selbst. F&uuml;r die meisten der richtige Weg. &lt;a href=&quot;https://apps.apple.com/app/id6802093315&quot;&gt;Im App Store &ouml;ffnen &#8594;&lt;/a&gt;">Sandboxed, signed by Apple, updates by itself. The recommended way for most people. <a href="https://apps.apple.com/app/id6802093315">Open in the App Store &#8594;</a></p>
+    </div>
+    <div class="card">
+      <h3 data-en="Or straight from GitHub" data-de="Oder direkt von GitHub">Or straight from GitHub</h3>
+      <p data-en="Same app, plus what the sandbox does not allow: display brightness, Wi-Fi and Bluetooth switches, AirDrop, Time Machine and the speed test."
+         data-de="Dieselbe App, dazu was die Sandbox nicht erlaubt: Display-Helligkeit, WLAN- und Bluetooth-Schalter, AirDrop, Time Machine und der Speedtest.">Same app, plus what the sandbox does not allow: display brightness, Wi-Fi and Bluetooth switches, AirDrop, Time Machine and the speed test.</p>
+    </div>
+  </div>
+  <ol style="margin-top:1.25rem">
+    <li data-en-html="Download &lt;code&gt;BarBox-x.y.zip&lt;/code&gt; from the &lt;a href=&quot;https://github.com/ipstyle/barbox/releases/latest&quot;&gt;latest release&lt;/a&gt; and unzip it."
+        data-de-html="&lt;code&gt;BarBox-x.y.zip&lt;/code&gt; aus dem &lt;a href=&quot;https://github.com/ipstyle/barbox/releases/latest&quot;&gt;neusten Release&lt;/a&gt; laden und entpacken.">Download <code>BarBox-x.y.zip</code> from the <a href="https://github.com/ipstyle/barbox/releases/latest">latest release</a> and unzip it.</li>
+    <li data-en-html="Move &lt;code&gt;BarBox.app&lt;/code&gt; to your Applications folder."
+        data-de-html="&lt;code&gt;BarBox.app&lt;/code&gt; in den Programme-Ordner verschieben.">Move <code>BarBox.app</code> to your Applications folder.</li>
+    <li data-en-html="First launch: the GitHub build is not notarized — right-click the app &#8594; &lt;b&gt;Open&lt;/b&gt; &#8594; &lt;b&gt;Open&lt;/b&gt;. Or, in Terminal:"
+        data-de-html="Erster Start: Der GitHub-Build ist nicht notarisiert — Rechtsklick auf die App &#8594; &lt;b&gt;&Ouml;ffnen&lt;/b&gt; &#8594; &lt;b&gt;&Ouml;ffnen&lt;/b&gt;. Oder im Terminal:">First launch: the GitHub build is not notarized — right-click the app &#8594; <b>Open</b> &#8594; <b>Open</b>. Or, in Terminal:</li>
+  </ol>
+  <pre>xattr -d com.apple.quarantine /Applications/BarBox.app</pre>
+</section>
 
-<h2>Privacy</h2>
-<p>No accounts, no tracking, no analytics, no third-party SDKs. The developer receives no data at all. Network requests go only to four public services — weather, currency rates, Swiss interest rates and a public-IP lookup — and carry no identifier.</p>
-<p><a href="https://github.com/ipstyle/barbox/blob/main/PRIVACY.md">Read the full privacy policy →</a></p>
+<section id="permissions">
+  <h2 data-en="Permissions" data-de="Freigaben">Permissions</h2>
+  <p class="sub"
+     data-en="Each one is asked for only when the matching feature is used for the first time — and every one can be declined without breaking the rest."
+     data-de="Jede wird erst gefragt, wenn die passende Funktion zum ersten Mal genutzt wird — und jede darf abgelehnt werden, ohne dass der Rest ausf&auml;llt.">Each one is asked for only when the matching feature is used for the first time — and every one can be declined without breaking the rest.</p>
+  <div class="scroll">
+    <table>
+      <tr>
+        <th data-en="Feature" data-de="Funktion">Feature</th>
+        <th data-en="Permission" data-de="Freigabe">Permission</th>
+      </tr>
+      <tr>
+        <td data-en="Weather" data-de="Wetter">Weather</td>
+        <td data-en="Location — or set a fallback place in the settings" data-de="Ortung — oder einen festen Ort in den Einstellungen setzen">Location — or set a fallback place in the settings</td>
+      </tr>
+      <tr>
+        <td data-en="Timer" data-de="Timer">Timer</td>
+        <td data-en="Notifications" data-de="Mitteilungen">Notifications</td>
+      </tr>
+      <tr>
+        <td data-en="Light/dark toggle, Focus" data-de="Hell/Dunkel, Fokus">Light/dark toggle, Focus</td>
+        <td data-en="Automation (System Events / Shortcuts)" data-de="Automation (System Events / Kurzbefehle)">Automation (System Events / Shortcuts)</td>
+      </tr>
+      <tr>
+        <td data-en="Bluetooth toggle" data-de="Bluetooth-Schalter">Bluetooth toggle</td>
+        <td data-en-html="&lt;a href=&quot;https://github.com/toy/blueutil&quot;&gt;blueutil&lt;/a&gt; plus the Bluetooth permission"
+            data-de-html="&lt;a href=&quot;https://github.com/toy/blueutil&quot;&gt;blueutil&lt;/a&gt; und die Bluetooth-Freigabe"><a href="https://github.com/toy/blueutil">blueutil</a> plus the Bluetooth permission</td>
+      </tr>
+    </table>
+  </div>
+</section>
 
-<h2>Support</h2>
-<p>Questions, bug reports and ideas belong in the issue tracker — that is the fastest way to reach the developer:</p>
-<p><a href="https://github.com/ipstyle/barbox/issues">github.com/ipstyle/barbox/issues</a></p>
+<section id="how">
+  <h2 data-en="How I build" data-de="Wie ich baue">How I build</h2>
+  <p class="sub"
+     data-en="Every claim on this page can be checked against the source — that is the point of shipping it open."
+     data-de="Jede Aussage auf dieser Seite l&auml;sst sich am Quellcode nachpr&uuml;fen — genau daf&uuml;r ist er offen.">Every claim on this page can be checked against the source — that is the point of shipping it open.</p>
+  <div class="cols">
+    <div>
+      <h3 data-en="At rest" data-de="Ruhend gespeichert">At rest</h3>
+      <p data-en="BarBox stores nothing sensitive: your settings sit in the app&#8217;s own preferences, your favorites in a small file next to them. No accounts, no passwords, no keychain items, no database. The clipboard history lives in memory only and is gone when you quit."
+         data-de="BarBox speichert nichts Sensibles: Einstellungen liegen in den app-eigenen Vorgaben, die Favoriten in einer kleinen Datei daneben. Keine Konten, keine Passw&ouml;rter, keine Schl&uuml;sselbund-Eintr&auml;ge, keine Datenbank. Der Zwischenablage-Verlauf lebt nur im Arbeitsspeicher und ist beim Beenden weg.">BarBox stores nothing sensitive: your settings sit in the app&#8217;s own preferences, your favorites in a small file next to them. No accounts, no passwords, no keychain items, no database. The clipboard history lives in memory only and is gone when you quit.</p>
+    </div>
+    <div>
+      <h3 data-en="In transit" data-de="Auf dem Weg">In transit</h3>
+      <p data-en-html="Four hosts over HTTPS, all of them public services, none of them mine: &lt;code&gt;api.open-meteo.com&lt;/code&gt; for weather, &lt;code&gt;api.frankfurter.dev&lt;/code&gt; for rates, &lt;code&gt;data.snb.ch&lt;/code&gt; for Swiss interest rates, and &lt;code&gt;api.ipify.org&lt;/code&gt; only when you click. No identifier travels with them."
+         data-de-html="Vier Server &uuml;ber HTTPS, alles &ouml;ffentliche Dienste, keiner davon meiner: &lt;code&gt;api.open-meteo.com&lt;/code&gt; f&uuml;rs Wetter, &lt;code&gt;api.frankfurter.dev&lt;/code&gt; f&uuml;r Kurse, &lt;code&gt;data.snb.ch&lt;/code&gt; f&uuml;r Schweizer Zinsen und &lt;code&gt;api.ipify.org&lt;/code&gt; nur auf Klick. Es reist keine Kennung mit.">Four hosts over HTTPS, all of them public services, none of them mine: <code>api.open-meteo.com</code> for weather, <code>api.frankfurter.dev</code> for rates, <code>data.snb.ch</code> for Swiss interest rates, and <code>api.ipify.org</code> only when you click. No identifier travels with them.</p>
+    </div>
+    <div>
+      <h3 data-en="Nothing comes back to me" data-de="Nichts kommt zu mir zur&uuml;ck">Nothing comes back to me</h3>
+      <p data-en="No analytics, no crash reporting, no telemetry, no third-party SDKs — so there is no dashboard anywhere showing what you did. OCR runs on the device; images and text never leave the machine."
+         data-de="Keine Analyse, keine Absturzberichte, keine Telemetrie, keine Fremd-SDKs — es gibt also nirgends eine Auswertung dar&uuml;ber, was du getan hast. Die Texterkennung l&auml;uft auf dem Ger&auml;t; Bilder und Text verlassen den Rechner nie.">No analytics, no crash reporting, no telemetry, no third-party SDKs — so there is no dashboard anywhere showing what you did. OCR runs on the device; images and text never leave the machine.</p>
+    </div>
+    <div>
+      <h3 data-en="Yours to keep" data-de="Bleibt deins">Yours to keep</h3>
+      <p data-en="Nothing sits behind a login only I control. Everything BarBox knows lives on your Mac in plain, standard places — drag the app to the trash and it is genuinely gone, no leftovers on a server."
+         data-de="Nichts liegt hinter einem Login, den nur ich kontrolliere. Alles, was BarBox wei&#223;, liegt auf deinem Mac an ganz gew&ouml;hnlichen Orten — App in den Papierkorb und es ist wirklich weg, ohne Reste auf einem Server.">Nothing sits behind a login only I control. Everything BarBox knows lives on your Mac in plain, standard places — drag the app to the trash and it is genuinely gone, no leftovers on a server.</p>
+    </div>
+    <div>
+      <h3 data-en="Native, not wrapped" data-de="Nativ, nicht verpackt">Native, not wrapped</h3>
+      <p data-en="Swift and SwiftUI throughout, no Electron, no bundled browser — under a megabyte to download instead of three hundred. The App Store build runs fully sandboxed."
+         data-de="Durchgehend Swift und SwiftUI, kein Electron, kein mitgeliefertes Browserfenster — unter einem Megabyte statt dreihundert. Der App-Store-Build l&auml;uft vollst&auml;ndig in der Sandbox.">Swift and SwiftUI throughout, no Electron, no bundled browser — under a megabyte to download instead of three hundred. The App Store build runs fully sandboxed.</p>
+    </div>
+    <div>
+      <h3 data-en="Open, so you need not trust me" data-de="Offen, damit du mir nicht glauben musst">Open, so you need not trust me</h3>
+      <p data-en-html="The whole app is GPL-3.0 on GitHub — including every line of network code. Read it, or build it yourself with &lt;code&gt;./build.sh&lt;/code&gt; and compare. Copying and forking are welcome; please keep the attribution."
+         data-de-html="Die ganze App liegt unter GPL-3.0 auf GitHub — samt jeder Zeile Netzwerkcode. Nachlesen, oder mit &lt;code&gt;./build.sh&lt;/code&gt; selbst bauen und vergleichen. Kopieren und Forken sind willkommen; bitte mit Namensnennung.">The whole app is GPL-3.0 on GitHub — including every line of network code. Read it, or build it yourself with <code>./build.sh</code> and compare. Copying and forking are welcome; please keep the attribution.</p>
+    </div>
+  </div>
+  <p class="sub" style="margin:1.6rem 0 0">
+    <a href="https://github.com/ipstyle/barbox/blob/main/PRIVACY.md"
+       data-en="Read the full privacy policy &#8594;" data-de="Die vollst&auml;ndige Datenschutzerkl&auml;rung lesen &#8594;">Read the full privacy policy &#8594;</a>
+  </p>
+</section>
 
-<h2>Build it yourself</h2>
-<p>Only the Xcode command line tools are required (Swift 5.9+), no Xcode project:</p>
-<pre>git clone https://github.com/ipstyle/barbox.git
+<section id="build">
+  <h2 data-en="Build it yourself" data-de="Selbst bauen">Build it yourself</h2>
+  <p class="sub"
+     data-en="Only the Xcode command line tools are needed (Swift 5.9+). There is no Xcode project — it is a Swift package."
+     data-de="Es braucht nur die Xcode Command Line Tools (Swift 5.9+). Ein Xcode-Projekt gibt es nicht — es ist ein Swift-Paket.">Only the Xcode command line tools are needed (Swift 5.9+). There is no Xcode project — it is a Swift package.</p>
+  <pre>git clone https://github.com/ipstyle/barbox.git
 cd barbox
 ./build.sh
 open build/BarBox.app</pre>
+</section>
+
+<section id="support">
+  <h2 data-en="Something broken?" data-de="Etwas kaputt?">Something broken?</h2>
+  <p class="sub"
+     data-en="Questions, bug reports and ideas belong in the issue tracker — that is where I read."
+     data-de="Fragen, Fehler und Ideen geh&ouml;ren in den Issue-Tracker — dort lese ich mit.">Questions, bug reports and ideas belong in the issue tracker — that is where I read.</p>
+  <p><a href="https://github.com/ipstyle/barbox/issues">github.com/ipstyle/barbox/issues</a></p>
+  <p class="sub" style="margin:1rem 0 0"
+     data-en="Security problems: please use the repository&#8217;s private reporting feature rather than a public issue."
+     data-de="Sicherheitsprobleme: bitte die private Meldefunktion des Repos nutzen statt eines &ouml;ffentlichen Issues.">Security problems: please use the repository&#8217;s private reporting feature rather than a public issue.</p>
+</section>
 
 <footer>
-  BarBox · <a href="https://github.com/ipstyle/barbox/blob/main/LICENSE">GPL-3.0</a> · © 2026 ipstyle<br>
-  Copying and forking are welcome under the licence terms — please keep the attribution.<br>
-  <a href="https://github.com/ipstyle/barbox">GitHub</a> ·
-  <a href="https://github.com/ipstyle/barbox/blob/main/PRIVACY.md">Privacy</a> ·
-  <a href="https://github.com/ipstyle/barbox/issues">Support</a> ·
-  <a href="https://github.com/ipstyle/barbox/blob/main/CHANGELOG.md">Changelog</a>
+  <p data-en-html="BarBox &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/blob/main/LICENSE&quot;&gt;GPL-3.0&lt;/a&gt; &#183; &#169; 2026 ipstyle &#183; &lt;a href=&quot;https://ipstyle.github.io&quot;&gt;All apps by ipstyle&lt;/a&gt;"
+     data-de-html="BarBox &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/blob/main/LICENSE&quot;&gt;GPL-3.0&lt;/a&gt; &#183; &#169; 2026 ipstyle &#183; &lt;a href=&quot;https://ipstyle.github.io&quot;&gt;Alle Apps von ipstyle&lt;/a&gt;">BarBox &#183; <a href="https://github.com/ipstyle/barbox/blob/main/LICENSE">GPL-3.0</a> &#183; &#169; 2026 ipstyle &#183; <a href="https://ipstyle.github.io">All apps by ipstyle</a></p>
+  <p data-en-html="&lt;a href=&quot;https://github.com/ipstyle/barbox&quot;&gt;GitHub&lt;/a&gt; &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/blob/main/PRIVACY.md&quot;&gt;Privacy&lt;/a&gt; &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/issues&quot;&gt;Support&lt;/a&gt; &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/blob/main/CHANGELOG.md&quot;&gt;Changelog&lt;/a&gt;"
+     data-de-html="&lt;a href=&quot;https://github.com/ipstyle/barbox&quot;&gt;GitHub&lt;/a&gt; &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/blob/main/PRIVACY.md&quot;&gt;Datenschutz&lt;/a&gt; &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/issues&quot;&gt;Support&lt;/a&gt; &#183; &lt;a href=&quot;https://github.com/ipstyle/barbox/blob/main/CHANGELOG.md&quot;&gt;&Auml;nderungen&lt;/a&gt;"><a href="https://github.com/ipstyle/barbox">GitHub</a> &#183; <a href="https://github.com/ipstyle/barbox/blob/main/PRIVACY.md">Privacy</a> &#183; <a href="https://github.com/ipstyle/barbox/issues">Support</a> &#183; <a href="https://github.com/ipstyle/barbox/blob/main/CHANGELOG.md">Changelog</a></p>
+  <p data-en="Apple, the Apple logo, Mac and the Mac App Store are trademarks of Apple Inc."
+     data-de="Apple, das Apple-Logo, Mac und der Mac App Store sind Marken von Apple Inc.">Apple, the Apple logo, Mac and the Mac App Store are trademarks of Apple Inc.</p>
 </footer>
 
 </div>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"BarBox",
+ "operatingSystem":"macOS 14","applicationCategory":"UtilitiesApplication",
+ "url":"https://ipstyle.github.io/barbox/",
+ "downloadUrl":"https://apps.apple.com/app/id6802093315",
+ "license":"https://github.com/ipstyle/barbox/blob/main/LICENSE",
+ "author":{"@type":"Organization","name":"ipstyle","url":"https://ipstyle.github.io"},
+ "offers":{"@type":"Offer","price":"0","priceCurrency":"CHF"}}
+</script>
+
+<script>
+(function () {
+  function paint(lang) {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-' + lang + '-html]').forEach(function (el) {
+      el.innerHTML = el.getAttribute('data-' + lang + '-html');
+    });
+    document.querySelectorAll('[data-' + lang + ']').forEach(function (el) {
+      el.textContent = el.getAttribute('data-' + lang);
+    });
+    // Das Thema erledigt <picture> selbst — hier wird nur die Sprache getauscht.
+    var loc = (lang === 'de' ? '-de' : '');
+    document.getElementById('badge-dark').srcset = 'img/mas-badge' + loc + '-dark.svg';
+    document.getElementById('badge-light').src = 'img/mas-badge' + loc + '-light.svg';
+    document.querySelectorAll('.lang button').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+    });
+    try { localStorage.setItem('ipstyle-lang', lang); } catch (e) {}
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem('ipstyle-lang'); } catch (e) {}
+  var start = saved || ((navigator.language || 'en').toLowerCase().indexOf('de') === 0 ? 'de' : 'en');
+
+  document.querySelectorAll('.lang button').forEach(function (b) {
+    b.addEventListener('click', function () { paint(b.dataset.lang); });
+  });
+  paint(start);
+})();
+</script>
 </body>
 </html>
