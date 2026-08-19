@@ -55,6 +55,15 @@
   `geocoding-api.open-meteo.com`, wenn man in den Einstellungen einen Ort sucht
   — überall stand aber «genau vier Server». Die Liste nennt jetzt alle sechs, in
   der App, im README, in der Datenschutzerklärung und auf der Website.
+- Two icon problems found while testing 2.1 and fixed before release: the menu
+  bar symbol drew nothing at all (the image was rendered lazily and never
+  reached the button), and switching on «keep awake» made it vanish completely
+  (tinting a template image). The active state now uses its own blue image. /
+  Zwei Symbol-Fehler, beim Testen von 2.1 gefunden und vor der Veröffentlichung
+  behoben: Das Menüleisten-Symbol zeichnete gar nichts (das Bild wurde verzögert
+  erzeugt und kam nie am Knopf an), und beim Einschalten von «Wach halten»
+  verschwand es ganz (Einfärben eines Template-Bildes). Der aktive Zustand hat
+  jetzt ein eigenes blaues Bild.
 - The website has a new **«What's new»** section, so you can see what changed
   before downloading. / Die Website hat neu einen Abschnitt **«Was ist neu»** —
   damit man vor dem Laden sieht, was sich geändert hat.
