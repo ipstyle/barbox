@@ -66,12 +66,14 @@ final class StatusBarController: NSObject {
 
     private func applyButton() {
         guard let button = statusItem.button else { return }
-        button.image = BarBoxIcon.menuBarImage
+        button.image = wakeActive ? BarBoxIcon.menuBarImageAwake : BarBoxIcon.menuBarImage
         button.imagePosition = .imageOnly   // ohne das zeichnet der Knopf je nach macOS gar nichts
         button.target = self
         button.action = #selector(togglePopover)
-        button.toolTip = "BarBox"
-        button.contentTintColor = wakeActive ? .systemBlue : nil
+        button.toolTip = wakeActive ? "BarBox — wach halten aktiv" : "BarBox"
+        // Nie contentTintColor setzen: Damit verschwand das Symbol vollständig
+        // aus der Menüleiste, sobald «Wach halten» eingeschaltet war.
+        button.contentTintColor = nil
     }
 
     /// Bei aktivem «Wach halten» wird das Symbol blau eingefärbt.
@@ -79,8 +81,9 @@ final class StatusBarController: NSObject {
         wake.$isActive
             .receive(on: RunLoop.main)
             .sink { [weak self] active in
-                self?.wakeActive = active
-                self?.statusItem?.button?.contentTintColor = active ? .systemBlue : nil
+                guard let self else { return }
+                self.wakeActive = active
+                self.applyButton()
             }
             .store(in: &cancellables)
     }
